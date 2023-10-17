@@ -1,7 +1,9 @@
+import Image from 'next/image'
+
 export default function Loading() {
     return (
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <img src="/loading.gif" alt="loading"></img>
+        <Image src="/loading.gif" width={150} height={150} alt="loading"/>
       </main>
     )
   }
