@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'ts_pht',
   description: 'Created by aliencake',
+  icons: '/favicon_round.ico'
 }
 
 export default function RootLayout({
@@ -15,8 +16,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="uk">
+      <body className={inter.className}>
+        {children}</body>
     </html>
   )
 }
