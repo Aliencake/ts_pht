@@ -7,7 +7,7 @@ export default function AdminLayout({
     children: React.ReactNode
   }) {
     return (
-      <section>
+      <section className="h-screen w-screen">
         <Provider>
           {children}
         </Provider>
