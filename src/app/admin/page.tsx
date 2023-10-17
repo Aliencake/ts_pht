@@ -1,5 +1,5 @@
 'use client'
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession} from "next-auth/react"
 import { redirect } from 'next/navigation'
 
 export default function Page() {
@@ -8,7 +8,7 @@ export default function Page() {
     {
     required: true,
     onUnauthenticated() {
-      redirect('/admin/signin')
+      redirect('/admin/login')
     }
   }
   )
@@ -19,7 +19,7 @@ export default function Page() {
   }
   return (
     <>
-    Page loaded
+    Адмін сторінка
     </>
   )
 }
