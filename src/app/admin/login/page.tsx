@@ -47,7 +47,7 @@ export default function Login() {
     if (searchParams.get('error')) {
       setLoginError(true)
     }
-  })
+  }, [searchParams])
 
   const { data: session, status } = useSession()
   if (status === "loading") {
