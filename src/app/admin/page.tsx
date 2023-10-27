@@ -1,8 +1,10 @@
 'use client'
 import { useSession, signOut } from "next-auth/react"
-import { redirect, useRouter} from 'next/navigation'
+import { redirect} from 'next/navigation'
 import Loading from "../components/Loading"
-import { Button } from "../components/ui/button"
+import NavBar from "../components/adminComponents/AdminNavBar"
+import LinksBoard from "../components/adminComponents/LinksBoard"
+
 
 export default function Page() {
   
@@ -15,14 +17,14 @@ export default function Page() {
   }
   )
   if (status === "loading") {
-    return <Loading></Loading>
+    return <Loading/>
   }
+
+
   return (
     <main className="flex flex-col items-center justify-between align-middle space-y-8">
-    <p className=" mt-4">Адмін сторінка</p>
-    <Button onClick={()=>{signOut()}}>Кнопка виходу</Button>
-    <a href="/"><Button>Повернутись на головну сторінку</Button></a>
-    
+      <NavBar/>
+      <LinksBoard/>
     </main>
   )
 }

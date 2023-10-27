@@ -10,7 +10,7 @@ import { Input } from '@/app/components/ui/input'
 import { redirect, useParams, useSearchParams } from "next/navigation"
 import Loading from "@/app/components/Loading"
 import { useEffect, useState } from "react"
-import { AlertDestructive } from "@/app/components/Alert"
+import { AlertDestructive } from "@/app/components/adminComponents/Alert"
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -59,7 +59,7 @@ export default function Login() {
 
   return (
     <main className="flex flex-col items-center justify-between align-middle space-y-8">
-      <h1 className="mt-24 mb-24 hover:rotate-180 text-red-900">Саша привіт!</h1>
+      <h1 className="text-xl mt-24 mb-20 hover:rotate-180 text-red-900" draggable>Саша привіт!</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -88,10 +88,10 @@ export default function Login() {
               </FormItem>
             )}
           />
-          <Button type="submit" >Увійти</Button>
+          <Button className=" w-60" type="submit" >Увійти</Button>
         </form>
       </Form>
-      {loginError ? <AlertDestructive alert_title="Помилка" alert_descrption="Невірні дані входу" /> : <></>}
+      {loginError ? <AlertDestructive alert_title="Помилка" alert_descrption="Невірні дані входу"  /> : <></>}
     </main>
   )
 }

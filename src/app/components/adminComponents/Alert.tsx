@@ -8,7 +8,7 @@ interface AlertDestructiveProps {
 
 export function AlertDestructive({ alert_title, alert_descrption }: AlertDestructiveProps) {
     return (
-      <Alert variant="destructive">
+      <Alert className="w-60" variant="destructive">
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>{alert_title}</AlertTitle>
         <AlertDescription>
