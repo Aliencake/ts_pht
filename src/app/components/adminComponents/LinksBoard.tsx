@@ -35,7 +35,8 @@ export default function LinksBoard() {
                 {
                     new_social_links.map((item, index) => {
                         return <li draggable className="m-4 flex flex-row"
-                            id={item.name}>
+                            id={item.name}
+                            key={item.id}>
                             <a className="hover:text-black/50" target="_blank" href={item.href}>{item.name}</a>
                             {isHovering ? <Trash2 onClick={() => { updateSocialLinks(new_social_links.filter((l) => l.id !== item.id)) }} /> : <></>}
                         </li>
