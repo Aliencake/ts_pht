@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+}
+
+model Link {
+  id Int @id @default(autoincrement())
+  title String
+  href String
+  index Int @default(autoincrement())
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  title String
+  photos Photo[]
+  index Int @default(autoincrement())
+}
+
+model Photo {
+  id Int @id @default(autoincrement())
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  href String
+  index Int @default(autoincrement())
+}

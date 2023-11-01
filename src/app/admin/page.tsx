@@ -1,10 +1,12 @@
 'use client'
-import { useSession, signOut } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { redirect} from 'next/navigation'
 import Loading from "../components/Loading"
 import NavBar from "../components/adminComponents/AdminNavBar"
 import LinksBoard from "../components/adminComponents/LinksBoard"
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
+const queryClient = new QueryClient()
 
 export default function Page() {
   
@@ -22,9 +24,11 @@ export default function Page() {
 
 
   return (
-    <main className="flex flex-col items-center justify-between align-middle space-y-8">
-      <NavBar/>
-      <LinksBoard/>
-    </main>
+    <QueryClientProvider client={queryClient}>
+      <main className="flex flex-col items-center justify-between align-middle space-y-8">
+        <NavBar/>
+        <LinksBoard/>
+      </main>
+    </QueryClientProvider>
   )
 }

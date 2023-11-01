@@ -2,12 +2,27 @@ import z from "zod"
 
 export type social_link = {
     id: number,
-    name: string,
+    title: string,
     href: string,
     index: number
 }
 
+export type Category = {
+  id: number,
+  title: string,
+  photos?: [],
+  index: number
+}
+
 export const add_social_link_schema = z.object({
-  name: z.string().min(3),
-  link: z.string().url({ message: "Invalid url" })
+  title: z.string().min(3),
+  href: z.string().url({ message: "Invalid url" })
+})
+
+export const id_schema = z.object({
+  _id: z.number()
+})
+
+export const add_category_schema = z.object({
+  title: z.string().min(3)
 })

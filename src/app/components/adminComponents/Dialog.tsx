@@ -16,13 +16,14 @@ import z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { add_social_link_schema, social_link } from "../../types"
 import { Dispatch, SetStateAction, useState } from "react"
+import {UseMutationResult} from '@tanstack/react-query'
 
 
-type AddLinksDialogProps = { new_social_links: social_link[], updateSocialLinks: Dispatch<SetStateAction<social_link[]>>};
+type AddLinksDialogProps = { mutation: UseMutationResult<any, Error, z.infer<typeof add_social_link_schema>, unknown>};
 
 
 
-export function AddLinksDialog({new_social_links, updateSocialLinks}: AddLinksDialogProps) {
+export function AddLinksDialog({mutation}: AddLinksDialogProps) {
   const form = useForm<z.infer<typeof add_social_link_schema>>({
     resolver: zodResolver(add_social_link_schema),
   })
@@ -30,24 +31,9 @@ export function AddLinksDialog({new_social_links, updateSocialLinks}: AddLinksDi
 
 
   function onSubmit(values: z.infer<typeof add_social_link_schema>) {
-    const newSocialLinks = [...new_social_links]
-    let new_id = newSocialLinks.at(-1)?.id
-    if (new_id == undefined) {
-      new_id = 0
-    }
-    else{
-      new_id++
-    }
-    const new_social_link: social_link = {
-      id: new_id,
-      name: values.name,
-      href: values.link,
-      index: 2
-    }
-    newSocialLinks.push(new_social_link)
-    updateSocialLinks(newSocialLinks)
+    mutation.mutate(values)
     form.reset()
-    setOpen(false)
+    // setOpen(false)
     
   }
   
@@ -67,7 +53,7 @@ export function AddLinksDialog({new_social_links, updateSocialLinks}: AddLinksDi
               <div className="grid grid-cols-4 items-center gap-4">
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="title"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Назва</FormLabel>
@@ -82,7 +68,7 @@ export function AddLinksDialog({new_social_links, updateSocialLinks}: AddLinksDi
               <div className="grid grid-cols-4 items-center gap-4">
                 <FormField
                   control={form.control}
-                  name="link"
+                  name="href"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Посилання</FormLabel>
