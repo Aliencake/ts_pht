@@ -1,7 +1,6 @@
 import { Button } from "../ui/button"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -14,29 +13,29 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form"
 import z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { add_social_link_schema, social_link } from "../../types"
-import { Dispatch, SetStateAction, useState } from "react"
-import {UseMutationResult} from '@tanstack/react-query'
+import { add_social_link_schema } from "../../types"
+import { useState } from "react"
+import { UseMutationResult } from '@tanstack/react-query'
 
 
-type AddLinksDialogProps = { mutation: UseMutationResult<any, Error, z.infer<typeof add_social_link_schema>, unknown>};
+type AddLinksDialogProps = { mutation: UseMutationResult<any, Error, z.infer<typeof add_social_link_schema>, unknown> };
 
 
 
-export function AddLinksDialog({mutation}: AddLinksDialogProps) {
+export function AddLinksDialog({ mutation }: AddLinksDialogProps) {
   const form = useForm<z.infer<typeof add_social_link_schema>>({
     resolver: zodResolver(add_social_link_schema),
   })
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
 
   function onSubmit(values: z.infer<typeof add_social_link_schema>) {
     mutation.mutate(values)
     form.reset()
-    // setOpen(false)
-    
+    setOpen(false)
   }
-  
+
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -58,9 +57,9 @@ export function AddLinksDialog({mutation}: AddLinksDialogProps) {
                     <FormItem>
                       <FormLabel>Назва</FormLabel>
                       <FormControl>
-                        <Input placeholder="Телеграм" className="col-span-3 w-max" {...field} />
+                        <Input placeholder="Телега" className="col-span-3 w-max" {...field} />
                       </FormControl>
-                      <FormMessage/>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -82,7 +81,7 @@ export function AddLinksDialog({mutation}: AddLinksDialogProps) {
               </div>
             </div>
             <DialogFooter>
-                <Button type="submit">Додати</Button>
+              <Button type="submit">Додати</Button>
             </DialogFooter>
           </form>
         </Form>

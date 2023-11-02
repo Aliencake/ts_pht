@@ -1,26 +1,36 @@
-import { PlusCircle, Trash2 } from "lucide-react"
+import { Trash2 } from "lucide-react"
 import { AddLinksDialog } from "./Dialog"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Link } from '@prisma/client'
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import axios from "axios"
 import { Skeleton } from "../ui/skeleton"
 import { z } from "zod"
-import { add_social_link_schema } from "@/app/types"
+import { queryClient } from "@/app/admin/page"
+import { add_social_link_schema, id_schema } from "@/app/types"
 
 
 export default function LinksBoard() {
 
-    const queryClient = new QueryClient()
     const [isHovering, setIsHovering] = useState(false)
-    const LinksMutation = useMutation({
-        mutationFn: (form: z.infer<typeof add_social_link_schema>) => {
-            return axios    
-        .post("api/links", form)
-        .then(res => res.data)
+    const AddLinksMutation = useMutation({
+        mutationFn: async (form: z.infer<typeof add_social_link_schema>) => {
+            const res = await axios
+                .post("api/links", form)
+            return res.data
         },
         onSuccess: () => {
-            queryClient.setQueryData(["links", data.id], data)
+            queryClient.invalidateQueries({ queryKey: ["links"] })
+        }
+    })
+
+    const DeleteLinksMutation = useMutation({
+        mutationFn: async (form: z.infer<typeof id_schema>) => {
+            const res = await axios
+                .delete("api/links", { data: form })
+            return res.data
+        },
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["links"] })
         }
     })
@@ -44,7 +54,7 @@ export default function LinksBoard() {
 
     return (
         <div className="flex flex-col items-center justify-between mt-[200px]">
-            <p>Посилання</p>
+            <h1>Посилання</h1>
             <ul
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
@@ -55,12 +65,12 @@ export default function LinksBoard() {
                             id={item.title}
                             key={item.id}>
                             <a className="hover:text-black/50" target="_blank" href={item.href}>{item.title}</a>
-                            {/* {isHovering ? <Trash2 onClick={() => { updateSocialLinks(new_data.filter((l) => l.id !== item.id)) }} /> : <></>} */}
+                            <Trash2 onClick={() => { DeleteLinksMutation.mutate({ _id: item.id }) }} />
                         </li>
                     })
                 }
                 <li>
-                    <AddLinksDialog mutation={LinksMutation} />
+                    <AddLinksDialog mutation={AddLinksMutation} />
                 </li>
             </ul>
         </div>
