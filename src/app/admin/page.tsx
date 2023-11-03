@@ -6,7 +6,7 @@ import NavBar from "../components/adminComponents/AdminNavBar"
 import LinksBoard from "../components/adminComponents/LinksBoard"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-export const queryClient = new QueryClient()
+const queryClient = new QueryClient()
 
 export default function Page() {
 
@@ -27,7 +27,7 @@ export default function Page() {
     <QueryClientProvider client={queryClient}>
       <main className="flex flex-col items-center justify-between align-middle space-y-8">
         <NavBar />
-        <LinksBoard />
+        <LinksBoard queryClient={queryClient}/>
       </main>
     </QueryClientProvider>
   )

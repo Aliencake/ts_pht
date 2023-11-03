@@ -2,15 +2,15 @@ import { Trash2 } from "lucide-react"
 import { AddLinksDialog } from "./Dialog"
 import { useState } from "react"
 import { Link } from '@prisma/client'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import axios from "axios"
 import { Skeleton } from "../ui/skeleton"
 import { z } from "zod"
-import { queryClient } from "@/app/admin/page"
 import { add_social_link_schema, id_schema } from "@/app/types"
 
+type LinksBoardProps =  {queryClient: QueryClient}
 
-export default function LinksBoard() {
+export default function LinksBoard({queryClient}: LinksBoardProps) {
 
     const [isHovering, setIsHovering] = useState(false)
     const AddLinksMutation = useMutation({
@@ -56,8 +56,6 @@ export default function LinksBoard() {
         <div className="flex flex-col items-center justify-between mt-[200px]">
             <h1>Посилання</h1>
             <ul
-                onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
                 className="flex flex-row rounded-lg  border-solid border-2 border-black">
                 {
                     new_data.map((item, index) => {
