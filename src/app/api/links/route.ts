@@ -8,7 +8,11 @@ import { add_social_link_schema, id_schema } from '@/app/types';
 
 export async function GET(request: Request) {
     try {
-        const links: Link[] = await prisma.link.findMany()
+        const links: Link[] = await prisma.link.findMany({
+            orderBy: [
+                { index: 'asc' },
+            ]
+        })
         return NextResponse.json(links)
     } catch (err) {
         return NextResponse.json(err)
@@ -16,12 +20,12 @@ export async function GET(request: Request) {
 }
 
 
-export async function POST(request: Request, response: Response) {
+export async function PUT(request: Request, response: Response) {
     try {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-          return NextResponse.json('You must be log in!')
+            return NextResponse.json('You must be log in!')
         }
 
         const link: Prisma.LinkCreateInput = add_social_link_schema.parse(await request.json())
@@ -43,10 +47,33 @@ export async function DELETE(request: Request) {
         const link_id = id_schema.parse(await request.json())
         const deleted_link: Link = await prisma.link.delete({
             where: {
-              id: link_id._id,
+                id: link_id._id,
             },
-          })
+        })
         return NextResponse.json(deleted_link)
+    } catch (err) {
+        return NextResponse.json(err)
+    }
+}
+
+export async function POST(request: Request) {
+    try {
+        const session = await getServerSession(authOptions)
+
+        if (!session) {
+            return NextResponse.json('You must be log in!')
+        }
+        const link: Link = await request.json()
+        const savedLink = await prisma.link.update({
+            where: {
+                id: link.id,
+            },
+            data: {
+                index: link.index,
+            },
+        });
+        return NextResponse.json(savedLink)
+        // return NextResponse.json(deleted_link)
     } catch (err) {
         return NextResponse.json(err)
     }

@@ -26,3 +26,8 @@ export const id_schema = z.object({
 export const add_category_schema = z.object({
   title: z.string().min(3).refine(s => s[0]!=' ', 'Назва не має мати пробіл на початку!')
 })
+
+export const update_social_link_index_schema = z.object({
+  _id: z.number(),
+  index: z.number()
+})
