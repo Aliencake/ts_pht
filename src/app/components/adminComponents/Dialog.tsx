@@ -39,7 +39,7 @@ export function AddLinksDialog({ mutation }: AddLinksDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <PlusCircle />
+        <Button className="mt-2" variant="outline">Додати нове посилання</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>

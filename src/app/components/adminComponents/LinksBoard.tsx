@@ -1,7 +1,6 @@
-import axios from "axios"
+import axios, { formToJSON } from "axios"
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { z } from "zod"
-import { Trash2 } from "lucide-react"
 import { useState } from "react"
 import { Link } from '@prisma/client'
 import { add_social_link_schema, id_schema, update_social_link_index_schema } from "@/app/types"
@@ -12,10 +11,7 @@ import { AddLinksDialog } from "./Dialog"
 import {
     DndContext,
     DragEndEvent,
-    MouseSensor,
     closestCenter,
-    useSensor,
-    useSensors
 } from "@dnd-kit/core"
 
 import {
@@ -23,6 +19,8 @@ import {
     SortableContext,
     rectSortingStrategy
 } from "@dnd-kit/sortable"
+import { restrictToWindowEdges } from '@dnd-kit/modifiers'
+
 
 
 const SortableItem = dynamic(() => import("./SortableItem"), {
@@ -33,35 +31,41 @@ const SortableItem = dynamic(() => import("./SortableItem"), {
 type LinksBoardProps = { queryClient: QueryClient }
 
 export default function LinksBoard({ queryClient }: LinksBoardProps) {
-    const mouseSensor = useSensor(MouseSensor, {
-        activationConstraint: {
-            distance: 10
-        }
-    })
+    const [links, setLinks] = useState<Link[]>()
+    
 
-    const sensors = useSensors(mouseSensor)
+    const AddLinksMutation = useMutation(
+        {
+            mutationFn: async (form: z.infer<typeof add_social_link_schema>) => {
+                const res = await axios
+                    .put("api/links", form)
+                return res.data
+            },
+            onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ['links'] })
+            },
+        })
 
-    const AddLinksMutation = useMutation({
-        mutationFn: async (form: z.infer<typeof add_social_link_schema>) => {
-            const res = await axios
-                .put("api/links", form)
-            return res.data
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["links"] })
-        }
-    })
-
-    const DeleteLinksMutation = useMutation({
-        mutationFn: async (form: z.infer<typeof id_schema>) => {
-            const res = await axios
-                .delete("api/links", { data: form })
-            return res.data
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["links"] })
-        }
-    })
+    const DeleteLinksMutation = useMutation(
+        {
+            mutationFn: async (form: z.infer<typeof id_schema>) => {
+                const res = await axios
+                    .delete("api/links", { data: form })
+                return res.data
+            },
+            onMutate: async (form) => {
+                await queryClient.cancelQueries({ queryKey: ['links'] })
+            
+                const previousLinks = queryClient.getQueryData(['links'])
+            
+                setLinks(links?.filter((item) => item.id !== form._id))
+            
+                return { previousLinks }
+              },
+            onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ['links'] })
+            },
+        })
 
     const UpdateLinksMutation = useMutation({
         mutationFn: async (form: z.infer<typeof update_social_link_index_schema>) => {
@@ -70,76 +74,79 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
             return res.data
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["links"] })
-        }
+            queryClient.invalidateQueries({ queryKey: ['links'] })
+        },
     })
 
     const { data, error, isLoading } = useQuery({
         queryKey: ["links"],
         queryFn: async () => {
-            return axios
-                .get("api/links")
-                .then(res => res.data)
+            const res = await axios
+            .get("api/links")
+            .then(res => res.data)
+            setLinks(res)
+            return res
         },
-        staleTime: Infinity
+        // staleTime: Infinity
     })
     if (isLoading) return <Skeleton className="w-[200px] h-[100px]" />
 
     if (error) {
         return <h1>{JSON.stringify(error)}</h1>
     }
+
     // if (data?.name == 'PrismaClientInitializationError') return "База даних не робе"
-
-    const links: Link[] = data
-
 
     function handlerDragEnd(event: DragEndEvent) {
         const { active, over } = event
+        if (links === undefined) return
         let linksToMove: Link[] = links
-        let activeLink
-        let overLink
-        
+
         if (active.id !== over?.id) {
-            for (let n in linksToMove){
-                if (linksToMove[n].id == active.id){
-                    activeLink = linksToMove[n]
+            let activeLinkIndex = 0
+            let overLinkIndex = 0
+            for (let n in linksToMove) {
+                if (linksToMove[n].id == active.id) {
+                    activeLinkIndex = Number(n)
                 }
-                if (linksToMove[n].id == over?.id){
-                    overLink = linksToMove[n]
+                if (linksToMove[n].id == over?.id) {
+                    overLinkIndex = Number(n)
                 }
             }
-            console.log(activeLink)
-            // const activeIndex = links.indexOf(active.id)
-            // const overIndex = links.indexOf()
-            // return arrayMove(links, activeIndex, overIndex)
-
+            linksToMove = arrayMove(linksToMove, activeLinkIndex, overLinkIndex)
+            let newLinks = []
+            for (let x in linksToMove) {
+                newLinks.push({ '_id': linksToMove[x].id, 'index': Number(x) })
+            }
+            setLinks(linksToMove)
+            UpdateLinksMutation.mutate(newLinks)
         }
     }
 
     return (
-        <main className="flex flex-col items-center justify-between mt-[200px]">
-            {/* flex flex-col items-center justify-between mt-[200px] */}
+        <div className="flex flex-col items-center justify-between">
             <DndContext
                 collisionDetection={closestCenter}
                 onDragEnd={handlerDragEnd}
-                sensors={sensors}
+                modifiers={[restrictToWindowEdges]}
             >
-                <h1>Посилання</h1>
-                <SortableContext
+               {links? <SortableContext
                     items={links}
                     strategy={rectSortingStrategy}
                 >
-                    <div className="box-border border-solid rounded border-2">
-                        <Grid columns={6}>
+                    <div className="box-border border-solid rounded-xl border-2">
+                        {links.length?<Grid columns={6}>
                             {links.map((item) =>
                                 <SortableItem key={item.id} item={item} deleteLinksMutation={DeleteLinksMutation} />
                             )
                             }
-                        </Grid>
+                        </Grid>: 
+                        <p>Список посилань ще порожній, проте можеш їх додати за допомогою кнопки нижче.</p>}
                     </div>
-                </SortableContext>
+                </SortableContext>:
+                <Skeleton className="w-[200px] h-[100px]" />}
             </DndContext>
             <AddLinksDialog mutation={AddLinksMutation} />
-        </main>
+        </div>
     )
 }   

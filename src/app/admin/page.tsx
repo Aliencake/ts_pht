@@ -5,6 +5,8 @@ import Loading from "../components/Loading"
 import NavBar from "../components/adminComponents/AdminNavBar"
 import LinksBoard from "../components/adminComponents/LinksBoard"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
+
 
 const queryClient = new QueryClient()
 
@@ -27,7 +29,16 @@ export default function Page() {
     <QueryClientProvider client={queryClient}>
       <main className="flex flex-col items-center justify-between align-middle space-y-8">
         <NavBar />
-        <LinksBoard queryClient={queryClient}/>
+        <Tabs defaultValue="links" >
+          <TabsList>
+            <TabsTrigger value="categories">Категорії та фотки</TabsTrigger>
+            <TabsTrigger value="links">Посилання</TabsTrigger>
+            <TabsTrigger value="activity">Активність</TabsTrigger>
+          </TabsList>
+          <TabsContent value="categories">Make changes to your account here.</TabsContent>
+          <TabsContent value="links"><LinksBoard queryClient={queryClient} /></TabsContent>
+          <TabsContent value="activity">Тут буде активність перегяду твого сайту</TabsContent>
+        </Tabs>
       </main>
     </QueryClientProvider>
   )

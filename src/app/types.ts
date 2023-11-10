@@ -30,4 +30,4 @@ export const add_category_schema = z.object({
 export const update_social_link_index_schema = z.object({
   _id: z.number(),
   index: z.number()
-})
+}).array()

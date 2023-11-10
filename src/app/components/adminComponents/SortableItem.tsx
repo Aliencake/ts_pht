@@ -1,12 +1,13 @@
 import { id_schema } from "@/app/types";
 import { useSortable } from "@dnd-kit/sortable"
-import {CSS} from "@dnd-kit/utilities"
+import { CSS } from "@dnd-kit/utilities"
 import { Link } from "@prisma/client";
 import { UseMutationResult } from "@tanstack/react-query";
-import { Trash2 } from "lucide-react";
+import { Trash2, X } from "lucide-react";
+import { useState } from "react";
 import { z } from "zod";
 
-type SortableItemProps =  {item: Link, deleteLinksMutation: UseMutationResult<any, Error, z.infer<typeof id_schema>, unknown>}
+type SortableItemProps = { item: Link, deleteLinksMutation: UseMutationResult<any, Error, z.infer<typeof id_schema>, unknown> }
 
 
 export default function SortableItem(props: SortableItemProps) {
@@ -17,7 +18,8 @@ export default function SortableItem(props: SortableItemProps) {
         setNodeRef,
         transform,
         transition
-    } = useSortable({id: props.item.id});
+    } = useSortable({ id: props.item.id });
+
 
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -27,7 +29,8 @@ export default function SortableItem(props: SortableItemProps) {
     return (
         <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
             <p>{props.item.title}</p>
-            <Trash2 onClick={() => { props.deleteLinksMutation.mutate({ _id: props.item.id }) }} />     
+            {/* <X onClick={() => { props.deleteLinksMutation.mutate({ _id: props.item.id }) }} /> */}
+
         </div>
     )
 }
