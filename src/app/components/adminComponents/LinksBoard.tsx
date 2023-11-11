@@ -1,25 +1,36 @@
-import axios, { formToJSON } from "axios"
+import axios from "axios"
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { z } from "zod"
 import { useState } from "react"
 import { Link } from '@prisma/client'
 import { add_social_link_schema, id_schema, update_array_index_schema } from "@/app/types"
 import dynamic from 'next/dynamic';
-import Grid from "./Grid";
+import {
+    Table,
+    TableBody,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "../ui/table"
 import { Skeleton } from "../ui/skeleton"
 import { AddLinksDialog } from "./Dialog"
 import {
     DndContext,
     DragEndEvent,
     closestCenter,
+    MouseSensor,
+    TouchSensor,
+    useSensor,
+    useSensors
 } from "@dnd-kit/core"
-
 import {
     arrayMove,
     SortableContext,
-    rectSortingStrategy
+    verticalListSortingStrategy
 } from "@dnd-kit/sortable"
-import { restrictToWindowEdges } from '@dnd-kit/modifiers'
+import { restrictToParentElement, restrictToWindowEdges } from '@dnd-kit/modifiers'
+
+
 
 
 
@@ -32,7 +43,23 @@ type LinksBoardProps = { queryClient: QueryClient }
 
 export default function LinksBoard({ queryClient }: LinksBoardProps) {
     const [links, setLinks] = useState<Link[]>()
-    
+
+    const mouseSensor = useSensor(MouseSensor, {
+        activationConstraint: {
+            distance: 10,
+        },
+    })
+    const touchSensor = useSensor(TouchSensor, {
+        activationConstraint: {
+            delay: 250,
+            tolerance: 5,
+        },
+    })
+    const sensors = useSensors(
+        mouseSensor,
+        touchSensor,
+    )
+
 
     const AddLinksMutation = useMutation(
         {
@@ -55,13 +82,13 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
             },
             onMutate: async (form) => {
                 await queryClient.cancelQueries({ queryKey: ['links'] })
-            
+
                 const previousLinks = queryClient.getQueryData(['links'])
-            
+
                 setLinks(links?.filter((item) => item.id !== form._id))
-            
+
                 return { previousLinks }
-              },
+            },
             onSuccess: () => {
                 queryClient.invalidateQueries({ queryKey: ['links'] })
             },
@@ -78,16 +105,27 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
         },
     })
 
+    const IsActiveLinksMutation = useMutation({
+        mutationFn: async (form: z.infer<typeof id_schema>) => {
+            const res = await axios
+                .put("api/links/active", { data: form })
+            return res.data
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['links'] })
+        },
+    })
+
     const { data, error, isLoading } = useQuery({
         queryKey: ["links"],
         queryFn: async () => {
             const res = await axios
-            .get("api/links")
-            .then(res => res.data)
+                .get("api/links")
+                .then(res => res.data)
             setLinks(res)
             return res
         },
-        // staleTime: Infinity
+        staleTime: Infinity
     })
     if (isLoading) return <Skeleton className="w-[200px] h-[100px]" />
 
@@ -128,23 +166,33 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
             <DndContext
                 collisionDetection={closestCenter}
                 onDragEnd={handlerDragEnd}
-                modifiers={[restrictToWindowEdges]}
+                modifiers={[restrictToWindowEdges, restrictToParentElement]}
+                sensors={sensors}
             >
-               {links? <SortableContext
+                {links ? <SortableContext
                     items={links}
-                    strategy={rectSortingStrategy}
+                    strategy={verticalListSortingStrategy}
                 >
-                    <div className="box-border border-solid rounded-xl border-2">
-                        {links.length?<Grid columns={6}>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Індекс</TableHead>
+                                <TableHead className="w-[100px]">Назва</TableHead>
+                                <TableHead>Посилання</TableHead>
+                                <TableHead>Активне</TableHead>
+                                <TableHead className="text-right">Видалити</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
                             {links.map((item) =>
-                                <SortableItem key={item.id} item={item} deleteLinksMutation={DeleteLinksMutation} />
+                                <SortableItem key={item.id} item={item} deleteLinksMutation={DeleteLinksMutation} isActiveMutation={IsActiveLinksMutation}/>
                             )
                             }
-                        </Grid>: 
-                        <p>Список посилань ще порожній, проте можеш їх додати за допомогою кнопки нижче.</p>}
-                    </div>
-                </SortableContext>:
-                <Skeleton className="w-[200px] h-[100px]" />}
+                        </TableBody>
+                    </Table>
+
+                </SortableContext> :
+                    <Skeleton className="w-[200px] h-[100px]" />}
             </DndContext>
             <AddLinksDialog mutation={AddLinksMutation} />
         </div>

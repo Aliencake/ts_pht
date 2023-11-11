@@ -14,6 +14,7 @@ model Link {
   id Int @id @default(autoincrement())
   title String
   href String
+  isActive Boolean @default(true)
   index Int @default(autoincrement())
 }
 
@@ -21,6 +22,7 @@ model Category {
   id Int @id @default(autoincrement())
   title String
   media Media[]
+  isActive Boolean @default(true)
   index Int @default(autoincrement())
 }
 
@@ -30,6 +32,7 @@ model Media {
   categoryId Int
   href String
   type Type
+  isActive Boolean @default(true)
   index Int @default(autoincrement())
 }
 

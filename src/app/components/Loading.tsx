@@ -1,9 +1,9 @@
-import Image from 'next/image'
+import { Aperture } from 'lucide-react'
 
 export default function Loading() {
     return (
       <main className="flex min-h-screen flex-col items-center justify-between mt-[200px]">
-        <Image src="/loading.gif" alt="Loading" width={50} height={50} quality={60} priority={true}/>
+        <Aperture className='animate-[spin_1s_linear_infinite]' size={70} color="#7F0000" strokeWidth={0.75} />
       </main>
     )
   }
