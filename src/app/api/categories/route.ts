@@ -1,9 +1,9 @@
 import { prisma } from '@/app/db';
-import { Prisma } from '@prisma/client'
+import { Prisma, Category } from '@prisma/client'
 import { getServerSession } from 'next-auth/next';
 import { NextResponse } from 'next/server';
 import { authOptions } from '../auth/[...nextauth]/auth';
-import { Category, add_category_schema, id_schema } from '@/app/types';
+import { add_category_schema, id_schema } from '@/app/types';
 
 
 export async function GET(request: Request) {
@@ -42,7 +42,7 @@ export async function DELETE(request: Request) {
         }
 
         const category_id = id_schema.parse(await request.json())
-        await prisma.photo.deleteMany({
+        await prisma.media.deleteMany({
             where: {
                 categoryId: category_id._id,
             },
