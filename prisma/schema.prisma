@@ -20,14 +20,20 @@ model Link {
 model Category {
   id Int @id @default(autoincrement())
   title String
-  photos Photo[]
+  media Media[]
   index Int @default(autoincrement())
 }
 
-model Photo {
+model Media {
   id Int @id @default(autoincrement())
   category Category @relation(fields: [categoryId], references: [id])
   categoryId Int
   href String
+  type Type
   index Int @default(autoincrement())
+}
+
+enum Type {
+  PHOTO
+  VIDEO
 }

@@ -7,8 +7,8 @@ import { Category, add_category_schema, id_schema } from '@/app/types';
 
 export async function GET(request: Request) {
     try {
-        const photo = await prisma.photo.findMany()
-        return NextResponse.json(photo)
+        const media = await prisma.media.findMany()
+        return NextResponse.json(media)
     } catch (err) {
         return NextResponse.json(err)
     }

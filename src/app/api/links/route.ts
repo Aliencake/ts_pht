@@ -3,7 +3,7 @@ import { Link, Prisma } from '@prisma/client'
 import { getServerSession } from 'next-auth/next';
 import { NextResponse } from 'next/server';
 import { authOptions } from '../auth/[...nextauth]/auth';
-import { add_social_link_schema, id_schema, update_social_link_index_schema } from '@/app/types';
+import { add_social_link_schema, id_schema, update_array_index_schema } from '@/app/types';
 
 
 export async function GET(request: Request) {
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
             return NextResponse.json('You must be log in!')
         }
         const res = await request.json()
-        const links = update_social_link_index_schema.parse(res['data'])
+        const links = update_array_index_schema.parse(res['data'])
         const results = await prisma.$transaction(
             links.map((link) =>
             prisma.link.update({

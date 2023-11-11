@@ -3,7 +3,7 @@ import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { z } from "zod"
 import { useState } from "react"
 import { Link } from '@prisma/client'
-import { add_social_link_schema, id_schema, update_social_link_index_schema } from "@/app/types"
+import { add_social_link_schema, id_schema, update_array_index_schema } from "@/app/types"
 import dynamic from 'next/dynamic';
 import Grid from "./Grid";
 import { Skeleton } from "../ui/skeleton"
@@ -68,7 +68,7 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
         })
 
     const UpdateLinksMutation = useMutation({
-        mutationFn: async (form: z.infer<typeof update_social_link_index_schema>) => {
+        mutationFn: async (form: z.infer<typeof update_array_index_schema>) => {
             const res = await axios
                 .post("api/links", { data: form })
             return res.data

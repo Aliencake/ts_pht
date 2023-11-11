@@ -31,7 +31,7 @@ export default function Page() {
         <NavBar />
         <Tabs defaultValue="links" >
           <TabsList>
-            <TabsTrigger value="categories">Категорії та фотки</TabsTrigger>
+            <TabsTrigger value="categories">Категорії та медіа</TabsTrigger>
             <TabsTrigger value="links">Посилання</TabsTrigger>
             <TabsTrigger value="activity">Активність</TabsTrigger>
           </TabsList>
