@@ -13,7 +13,7 @@ import {
     TableRow,
 } from "../ui/table"
 import { Skeleton } from "../ui/skeleton"
-import { AddLinksDialog } from "./Dialog"
+import { AddLinksDialog } from "./AddLinksDialog"
 import {
     DndContext,
     DragEndEvent,
@@ -34,7 +34,7 @@ import { restrictToParentElement, restrictToWindowEdges } from '@dnd-kit/modifie
 
 
 
-const SortableItem = dynamic(() => import("./SortableItem"), {
+const SortableLink = dynamic(() => import("./SortableLink"), {
     ssr: false,
 });
 
@@ -66,6 +66,9 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
             mutationFn: async (form: z.infer<typeof add_social_link_schema>) => {
                 const res = await axios
                     .put("api/links", form)
+                let updatedLinks = links
+                updatedLinks?.push(res.data)
+                setLinks(updatedLinks)
                 return res.data
             },
             onSuccess: () => {
@@ -122,12 +125,13 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
             const res = await axios
                 .get("api/links")
                 .then(res => res.data)
-            setLinks(res)
             return res
         },
-        staleTime: Infinity
+        staleTime: Infinity,
     })
-    if (isLoading) return <Skeleton className="w-[200px] h-[100px]" />
+
+    if (isLoading) return <Skeleton className="w-[300px] h-[200px]" />
+
 
     if (error) {
         return <h1>{JSON.stringify(error)}</h1>
@@ -161,8 +165,13 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
         }
     }
 
+
+    if (!links) {
+        setLinks(data)
+    }
+
     return (
-        <div className="flex flex-col items-center justify-between">
+        <div className="flex flex-col items-center justify-between shrink ">
             <DndContext
                 collisionDetection={closestCenter}
                 onDragEnd={handlerDragEnd}
@@ -184,15 +193,15 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {links.map((item) =>
-                                <SortableItem key={item.id} item={item} deleteLinksMutation={DeleteLinksMutation} isActiveMutation={IsActiveLinksMutation}/>
+                            {links.map((item, index) =>
+                                <SortableLink key={item.id} item={item} deleteLinksMutation={DeleteLinksMutation} isActiveMutation={IsActiveLinksMutation} index={index+1} />
                             )
                             }
                         </TableBody>
                     </Table>
-
+                    <Skeleton/>
                 </SortableContext> :
-                    <Skeleton className="w-[200px] h-[100px]" />}
+                    <Skeleton className="w-[300px] h-[200px]" />}
             </DndContext>
             <AddLinksDialog mutation={AddLinksMutation} />
         </div>

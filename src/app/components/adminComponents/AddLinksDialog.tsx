@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog"
 import { Input } from "../ui/input"
-import { PlusCircle } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { useForm } from "react-hook-form"
 import z from "zod"
@@ -39,7 +39,9 @@ export function AddLinksDialog({ mutation }: AddLinksDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mt-2" variant="outline">Додати нове посилання</Button>
+        <Button className="mt-4" disabled={mutation.isPending} variant="outline">
+          {mutation.isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Додаємо</> : <>Додати нове посилання</>}
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
