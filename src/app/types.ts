@@ -18,3 +18,10 @@ export const update_array_index_schema = z.object({
   _id: z.number(),
   index: z.number()
 }).array()
+
+export const add_media_schema = z.object({
+  href: z.string().url(),
+  thumbnail: z.optional(z.string().url()),
+  categoryid: z.number(),
+  type: z.enum(["PHOTO", "VIDEO"])
+})

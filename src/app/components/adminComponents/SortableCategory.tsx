@@ -2,18 +2,20 @@ import { id_schema } from "@/app/types";
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { Category } from "@prisma/client";
-import { UseMutationResult } from "@tanstack/react-query";
-import { ExternalLink, X } from "lucide-react";
+import { QueryClient, UseMutationResult } from "@tanstack/react-query";
+import { X } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
 import { TableCell, TableRow } from "../ui/table";
 import { Checkbox } from "../ui/checkbox";
+import { MediaBoardDialog } from "./MediaBoard";
 
 type SortableCategoryProps = {
     item: Category,
     deleteLinksMutation: UseMutationResult<any, Error, z.infer<typeof id_schema>, unknown>,
     isActiveMutation: UseMutationResult<any, Error, z.infer<typeof id_schema>, unknown>,
-    index: number
+    index: number,
+    queryClient: QueryClient
 }
 
 
@@ -39,11 +41,13 @@ export default function SortableCategory(props: SortableCategoryProps) {
         setChecked(checked)
         props.isActiveMutation.mutate({ _id: props.item.id })
     }
-
     return (
         <TableRow key={props.item.id} ref={setNodeRef} style={style} {...attributes} {...listeners}>
             <TableCell className="font-medium">{props.index}</TableCell>
             <TableCell className="font-medium">{props.item.title}</TableCell>
+            <TableCell className="">
+                <MediaBoardDialog category={props.item} queryClient={props.queryClient}/>
+            </TableCell>
             <TableCell className="">
                 <Checkbox checked={ischecked} onCheckedChange={onChecked} id={"ch" + props.item.title} />
             </TableCell>

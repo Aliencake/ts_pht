@@ -13,11 +13,11 @@ export async function PUT(request: Request, response: Response) {
         }
         const res = await request.json()
         const data = id_schema.parse(res['data'])
-        const link = await prisma.link.findFirst({ where: { id: data._id } })
+        const category = await prisma.category.findFirst({ where: { id: data._id } })
         const results = await
-            prisma.link.update({
+            prisma.category.update({
                 where: { id: data._id },
-                data: { isActive: !link?.isActive },
+                data: { isActive: !category?.isActive },
             })
 
         return NextResponse.json(results)

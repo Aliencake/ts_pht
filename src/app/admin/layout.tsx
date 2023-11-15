@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import Provider from "../components/Provider"
+import { EdgeStoreProvider } from '../../lib/edgestore'
 
 export const metadata: Metadata = {
   title: 'Admin page',
@@ -9,16 +10,18 @@ export const metadata: Metadata = {
 
 
 export default function AdminLayout({
-  
-    children,
-  }: {
-    children: React.ReactNode
-  }) {
-    return (
-      <section className="h-screen w-screen">
-        <Provider>
+
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <section className="h-screen w-screen">
+      <Provider>
+        <EdgeStoreProvider>
           {children}
-        </Provider>
-      </section>
-    )
-  }
+          </EdgeStoreProvider>
+      </Provider>
+    </section>
+  )
+}

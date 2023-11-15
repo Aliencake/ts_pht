@@ -32,6 +32,7 @@ model Media {
   category Category @relation(fields: [categoryId], references: [id])
   categoryId Int
   href String
+  thumbnail String? @default("")
   type Type
   isActive Boolean @default(true)
   index Int @default(autoincrement())

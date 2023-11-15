@@ -2,8 +2,8 @@ import axios from "axios"
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { z } from "zod"
 import { useState } from "react"
-import { Category, Link } from '@prisma/client'
-import { add_category_schema, add_social_link_schema, id_schema, update_array_index_schema } from "@/app/types"
+import { Category } from '@prisma/client'
+import { add_category_schema, id_schema, update_array_index_schema } from "@/app/types"
 import dynamic from 'next/dynamic';
 import {
     Table,
@@ -13,7 +13,6 @@ import {
     TableRow,
 } from "../ui/table"
 import { Skeleton } from "../ui/skeleton"
-import { AddLinksDialog } from "./AddLinksDialog"
 import {
     DndContext,
     DragEndEvent,
@@ -185,13 +184,14 @@ export default function CategoriesBoard({ queryClient }: CategoriesBoardProps) {
                             <TableRow>
                                 <TableHead>Індекс</TableHead>
                                 <TableHead className="w-[100px]">Назва</TableHead>
+                                <TableHead className="w-[100px]">Медіа</TableHead>
                                 <TableHead>Активне</TableHead>
                                 <TableHead className="text-right">Видалити</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {categories.map((item, index) =>
-                                <SortableCategory key={item.id} item={item} deleteLinksMutation={DeleteCategoriesMutation} isActiveMutation={IsActiveCategoriesMutation} index={index+1} />
+                                <SortableCategory key={item.id} item={item} deleteLinksMutation={DeleteCategoriesMutation} isActiveMutation={IsActiveCategoriesMutation} index={index+1} queryClient={queryClient}/>
                             )
                             }
                         </TableBody>
