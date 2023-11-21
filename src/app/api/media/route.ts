@@ -1,20 +1,25 @@
 import { prisma } from '@/app/db';
 import { Media, Prisma } from '@prisma/client'
 import { getServerSession } from 'next-auth/next';
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { authOptions } from '../auth/[...nextauth]/auth';
 import { add_media_schema, id_schema, update_array_index_schema } from '@/app/types';
 
-
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
     try {
+        const searchParams = request.nextUrl.searchParams
+        const query = searchParams.get('Category_ID')
         const media: Media[] = await prisma.media.findMany({
+            where: {
+                categoryId: Number(query),
+            },
             orderBy: [
                 { index: 'asc' },
             ]
         })
         return NextResponse.json(media)
     } catch (err) {
+        console.log(err)
         return NextResponse.json(err)
     }
 }

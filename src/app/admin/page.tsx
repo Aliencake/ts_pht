@@ -7,7 +7,6 @@ import LinksBoard from "../components/adminComponents/LinksBoard"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import CategoriesBoard from "../components/adminComponents/CategoriesBoard"
-import { MultiFileDropzoneUsage } from "../components/adminComponents/UploadFiles"
 
 
 const queryClient = new QueryClient()

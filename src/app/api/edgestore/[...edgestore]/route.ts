@@ -8,11 +8,19 @@ const edgeStoreRouter = es.router({
     Photos: es
     .imageBucket({
       maxSize: 1024 * 1024 * 100,
+    })
+    .beforeDelete(({ ctx, fileInfo }) => {
+      console.log('beforeDelete', ctx, fileInfo);
+      return true; // allow delete
     }),
     Files: es.fileBucket({
         maxSize: 1024 * 1024 * 200,
         accept: ['video/*'],
-    })
+    })    
+    .beforeDelete(({ ctx, fileInfo }) => {
+      console.log('beforeDelete', ctx, fileInfo);
+      return true; // allow delete
+    }),
 });
  
 const handler = createEdgeStoreNextHandler({
