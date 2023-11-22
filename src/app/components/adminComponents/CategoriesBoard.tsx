@@ -131,13 +131,10 @@ export default function CategoriesBoard({ queryClient }: CategoriesBoardProps) {
 
 
     if (error) {
-        return <h1>{JSON.stringify(error)}</h1>
+        console.log(error)
+        return <h1>Сталася помилка, натисни F12 щоб переглянути її.</h1>
     }
 
-    if (data?.name == ('PrismaClientInitializationError' || 'PrismaClientKnownRequestError' || 'PrismaClientUnknownRequestError')) {
-        console.log(data)
-        return "База даних не робе"
-    }
 
     function handlerDragEnd(event: DragEndEvent) {
         const { active, over } = event
@@ -165,12 +162,9 @@ export default function CategoriesBoard({ queryClient }: CategoriesBoardProps) {
         }
     }
 
-
-
     if (!categories) {
         setCategories(data)
     }
-
 
     return (
         <div className="flex flex-col items-center justify-between shrink ">

@@ -9,7 +9,7 @@ export async function PUT(request: Request, response: Response) {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-            return NextResponse.json('You must be log in!')
+            return NextResponse.json('You must be log in!', {status: 401})
         }
         const res = await request.json()
         const data = id_schema.parse(res['data'])
@@ -22,6 +22,6 @@ export async function PUT(request: Request, response: Response) {
 
         return NextResponse.json(results)
     } catch (err) {
-        return NextResponse.json(err)
+        return NextResponse.json(err, {status: 500})
     }
 }

@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(media)
     } catch (err) {
         console.log(err)
-        return NextResponse.json(err)
+        return NextResponse.json(err, {status: 500})
     }
 }
 
@@ -31,7 +31,7 @@ export async function PUT(request: Request, response: Response) {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-            return NextResponse.json('You must be log in!')
+            return NextResponse.json('You must be log in!', {status: 401})
         }
         const parsedMedia = add_media_schema.parse(await request.json())
         const media: Prisma.MediaCreateInput = {
@@ -47,8 +47,7 @@ export async function PUT(request: Request, response: Response) {
         const savedMedia = await prisma.media.create({ data: media });
         return NextResponse.json(savedMedia)
     } catch (err) {
-        console.log(err)
-        return NextResponse.json(err)
+        return NextResponse.json(err, {status: 500})
     }
 }
 
@@ -58,7 +57,7 @@ export async function DELETE(request: Request) {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-            return NextResponse.json('You must be log in!')
+            return NextResponse.json('You must be log in!', {status: 401})
         }
         const media_id = id_schema.parse(await request.json())
         const deleted_media: Media = await prisma.media.delete({
@@ -77,7 +76,7 @@ export async function DELETE(request: Request) {
         return NextResponse.json(deleted_media)
     }
     catch (err) {
-        return NextResponse.json(err)
+        return NextResponse.json(err, {status: 500})
     }
 }
 
@@ -86,7 +85,7 @@ export async function POST(request: Request) {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-            return NextResponse.json('You must be log in!')
+            return NextResponse.json('You must be log in!', {status: 401})
         }
         const res = await request.json()
         const media = update_array_index_schema.parse(res['data'])
@@ -101,6 +100,6 @@ export async function POST(request: Request) {
         return NextResponse.json(results)
     } catch (err) {
         console.log(err)
-        return NextResponse.json(err)
+        return NextResponse.json(err, {status: 500})
     }
 }

@@ -16,7 +16,7 @@ export async function GET(request: Request) {
         })
         return NextResponse.json(categories)
     } catch (err) {
-        return NextResponse.json(err)
+        return NextResponse.json(err, {status: 500})
     }
 }
 
@@ -26,13 +26,13 @@ export async function PUT(request: Request, response: Response) {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-            return NextResponse.json('You must be log in!')
+            return NextResponse.json('You must be log in!', {status: 401})
         }
         const category: Prisma.CategoryCreateInput = add_category_schema.parse(await request.json())
         const savedCategory = await prisma.category.create({ data: category });
         return NextResponse.json(savedCategory)
     } catch (err) {
-        return NextResponse.json(err)
+        return NextResponse.json(err, {status: 500})
     }
 }
 
@@ -42,7 +42,7 @@ export async function DELETE(request: Request) {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-            return NextResponse.json('You must be log in!')
+            return NextResponse.json('You must be log in!', {status: 401})
         }
         const category_id = id_schema.parse(await request.json())
         const media: Media[] = await prisma.media.findMany({
@@ -76,8 +76,7 @@ export async function DELETE(request: Request) {
         })
         return NextResponse.json(deleted_category)
     } catch (err) {
-        console.log(err)
-        return NextResponse.json(err)
+        return NextResponse.json(err, {status: 500})
     }
 }
 
@@ -86,7 +85,7 @@ export async function POST(request: Request) {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-            return NextResponse.json('You must be log in!')
+            return NextResponse.json('You must be log in!', {status: 401})
         }
         const res = await request.json()
         const categories = update_array_index_schema.parse(res['data'])
@@ -100,7 +99,6 @@ export async function POST(request: Request) {
         )
         return NextResponse.json(results)
     } catch (err) {
-        console.log(err)
-        return NextResponse.json(err)
+        return NextResponse.json({err}, {status: 500})
     }
 }

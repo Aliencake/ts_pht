@@ -15,7 +15,7 @@ export async function GET(request: Request) {
         })
         return NextResponse.json(links)
     } catch (err) {
-        return NextResponse.json(err)
+        return NextResponse.json(err, {status: 500})
     }
 }
 
@@ -25,14 +25,14 @@ export async function PUT(request: Request, response: Response) {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-            return NextResponse.json('You must be log in!')
+            return NextResponse.json('You must be log in!', {status: 401})
         }
 
         const link: Prisma.LinkCreateInput = add_social_link_schema.parse(await request.json())
         const savedLink = await prisma.link.create({ data: link });
         return NextResponse.json(savedLink)
     } catch (err) {
-        return NextResponse.json(err)
+        return NextResponse.json(err, {status: 500})
     }
 }
 
@@ -42,7 +42,7 @@ export async function DELETE(request: Request) {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-            return NextResponse.json('You must be log in!')
+            return NextResponse.json('You must be log in!', {status: 401})
         }
         const link_id = id_schema.parse(await request.json())
         const deleted_link: Link = await prisma.link.delete({
@@ -52,7 +52,7 @@ export async function DELETE(request: Request) {
         })
         return NextResponse.json(deleted_link)
     } catch (err) {
-        return NextResponse.json(err)
+        return NextResponse.json(err, {status: 500})
     }
 }
 
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-            return NextResponse.json('You must be log in!')
+            return NextResponse.json('You must be log in!', {status: 401})
         }
         const res = await request.json()
         const links = update_array_index_schema.parse(res['data'])
@@ -75,7 +75,6 @@ export async function POST(request: Request) {
           )
         return NextResponse.json(results)
     } catch (err) {
-        console.log(err)
-        return NextResponse.json(err)
+        return NextResponse.json(err, {status: 500})
     }
 }
