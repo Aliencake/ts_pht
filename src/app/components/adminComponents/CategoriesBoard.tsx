@@ -162,10 +162,14 @@ export default function CategoriesBoard({ queryClient }: CategoriesBoardProps) {
         }
     }
 
+    console.log(data)
+
 
     if (!categories) {
         setCategories(data)
     }
+
+    console.log(categories)
 
     return (
         <div className="flex flex-col items-center justify-between shrink ">

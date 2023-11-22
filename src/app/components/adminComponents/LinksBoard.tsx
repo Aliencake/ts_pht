@@ -165,10 +165,15 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
         }
     }
 
+    console.log(data)
+
 
     if (!links) {
         setLinks(data)
     }
+
+    console.log(links)
+
 
     return (
         <div className="flex flex-col items-center justify-between shrink ">
