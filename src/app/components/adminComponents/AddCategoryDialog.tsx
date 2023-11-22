@@ -25,6 +25,9 @@ type AddCategoryDialogProps = { mutation: UseMutationResult<any, Error, z.infer<
 export function AddCategoryDialog({ mutation }: AddCategoryDialogProps) {
   const form = useForm<z.infer<typeof add_category_schema>>({
     resolver: zodResolver(add_category_schema),
+    defaultValues: {
+      title: "",
+        },
   })
   const [open, setOpen] = useState(false)
 

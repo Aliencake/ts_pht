@@ -48,7 +48,7 @@ export default function SortableMedia(props: SortableMediaProps) {
                 {props.index}
             </TableCell>
             <TableCell>
-                {thumbnail ? <img className="w-fit" src={thumbnail}/>: <FileVideo />}
+                {thumbnail ? <img className="w-fit" src={thumbnail} alt="thumbnail"/>: <FileVideo />}
             </TableCell>
             <TableCell className="font-medium">
                 {props.item.type}

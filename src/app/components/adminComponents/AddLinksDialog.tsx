@@ -25,6 +25,10 @@ type AddLinksDialogProps = { mutation: UseMutationResult<any, Error, z.infer<typ
 export function AddLinksDialog({ mutation }: AddLinksDialogProps) {
   const form = useForm<z.infer<typeof add_social_link_schema>>({
     resolver: zodResolver(add_social_link_schema),
+    defaultValues: {
+      title: "",
+      href: "",
+        },
   })
   const [open, setOpen] = useState(false)
 

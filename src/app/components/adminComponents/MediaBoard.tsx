@@ -73,19 +73,6 @@ export function MediaBoardDialog(props: MediaBoardDialogProps) {
             mutationFn: async (form: z.infer<typeof id_schema>) => {
                 const res = await axios
                     .delete("api/media", { data: form })
-                if (res.data) {
-                    const DeletedMedia: Media = res.data
-                    if (DeletedMedia.type === Type.PHOTO){
-                        await edgestore.Photos.delete({
-                            url: DeletedMedia.href,
-                          })
-                    }
-                    else if (DeletedMedia.type === Type.VIDEO){
-                        await edgestore.Files.delete({
-                            url: DeletedMedia.href,
-                          })
-                    }
-                }
                 return res.data
             },
             onMutate: async (form) => {
@@ -129,6 +116,9 @@ export function MediaBoardDialog(props: MediaBoardDialogProps) {
             mutationFn: async (form: z.infer<typeof add_media_schema>) => {
                 const res = await axios
                     .put("api/media", form)
+                let updatedMedia = media
+                updatedMedia?.push(res.data)
+                setMedia(updatedMedia)
                 return res.data
             },
             onSuccess: () => {
@@ -168,16 +158,16 @@ export function MediaBoardDialog(props: MediaBoardDialogProps) {
             const res = await axios
                 .get("api/media", {
                     params: {
-                      Category_ID: props.category.id
+                        Category_ID: props.category.id
                     }
-                  })
+                })
                 .then(res => res.data)
             return res
         },
         staleTime: Infinity,
     })
 
-    if (isLoading) return 
+    if (isLoading) return
 
 
     if (error) {
@@ -191,10 +181,11 @@ export function MediaBoardDialog(props: MediaBoardDialogProps) {
 
     return (
         <Dialog>
+
             <DialogTrigger asChild>
                 <FolderOpen color="#000000" strokeWidth={1.5} />
             </DialogTrigger>
-            <DialogContent className="flex flex-col items-center" >
+            <DialogContent className="flex flex-col items-center overflow-y-auto" >
                 <DialogHeader>
                     <DialogTitle>{props.category.title}</DialogTitle>
                 </DialogHeader>

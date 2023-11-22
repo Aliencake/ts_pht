@@ -134,7 +134,7 @@ export default function CategoriesBoard({ queryClient }: CategoriesBoardProps) {
         return <h1>{JSON.stringify(error)}</h1>
     }
 
-    // if (data?.name == 'PrismaClientInitializationError') return "База даних не робе"
+    if (data?.name == ('PrismaClientInitializationError' || 'PrismaClientKnownRequestError')) return "База даних не робе"
 
     function handlerDragEnd(event: DragEndEvent) {
         const { active, over } = event

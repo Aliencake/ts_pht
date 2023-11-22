@@ -1,9 +1,10 @@
 import { prisma } from '@/app/db';
-import { Media, Prisma } from '@prisma/client'
+import { Media, Prisma, Type } from '@prisma/client'
 import { getServerSession } from 'next-auth/next';
 import { NextResponse, type NextRequest } from 'next/server';
 import { authOptions } from '../auth/[...nextauth]/auth';
 import { add_media_schema, id_schema, update_array_index_schema } from '@/app/types';
+import { edgeStoreClient } from '../edgestore/[...edgestore]/edgestore';
 
 export async function GET(request: NextRequest) {
     try {
@@ -37,12 +38,13 @@ export async function PUT(request: Request, response: Response) {
             href: parsedMedia.href,
             thumbnail: parsedMedia.thumbnail,
             type: parsedMedia.type,
-            category: {connect: {
-                id: parsedMedia.categoryid,
-              }}
+            category: {
+                connect: {
+                    id: parsedMedia.categoryid,
+                }
+            }
         }
         const savedMedia = await prisma.media.create({ data: media });
-        console.log(savedMedia)
         return NextResponse.json(savedMedia)
     } catch (err) {
         console.log(err)
@@ -64,8 +66,17 @@ export async function DELETE(request: Request) {
                 id: media_id._id,
             },
         })
+        if (deleted_media) {
+            if (deleted_media.type === Type.PHOTO) {
+                await edgeStoreClient.Photos.deleteFile({ url: deleted_media.href })
+            }
+            else if (deleted_media.type === Type.VIDEO) {
+                await edgeStoreClient.Files.deleteFile({ url: deleted_media.href })
+            }
+        }  
         return NextResponse.json(deleted_media)
-    } catch (err) {
+    }
+    catch (err) {
         return NextResponse.json(err)
     }
 }
