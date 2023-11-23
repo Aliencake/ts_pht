@@ -13,7 +13,7 @@ import {
     TableHeader,
     TableRow,
 } from "../ui/table"
-import { FolderOpen } from "lucide-react"
+import { AlertCircle, FolderOpen } from "lucide-react"
 
 import { MultiFileDropzoneUsage } from "./UploadFiles";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
@@ -165,13 +165,15 @@ export function MediaBoardDialog(props: MediaBoardDialogProps) {
             return res
         },
         staleTime: Infinity,
+        retry: 10
     })
 
     if (isLoading) return
 
 
     if (error) {
-        return <h1>{JSON.stringify(error)}</h1>
+        console.log(error)
+        return <AlertCircle color="#c72e2e" />
     }
 
     if (!media) {

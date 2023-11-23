@@ -128,6 +128,7 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
             return res
         },
         staleTime: Infinity,
+        retry: 10
     })
 
     if (isLoading) return <Skeleton className="w-[300px] h-[200px]" />
@@ -135,7 +136,7 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
 
     if (error) {
         console.log(error)
-        return <h1>Сталася помилка, натисни F12 щоб переглянути її.</h1>
+        return <h1>Сталася помилка, натисни F12 щоб переглянути.</h1>
     }
 
 
