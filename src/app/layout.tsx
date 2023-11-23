@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'ts_pht',
-  description: 'Created by aliencake',
+  description: 'Portfolio site',
   icons: '/favicon_round.ico'
 }
 
@@ -18,7 +18,8 @@ export default function RootLayout({
   return (
     <html lang="uk">
       <body className={inter.className}>
-        {children}</body>
+        {children}
+      </body>
     </html>
   )
 }
