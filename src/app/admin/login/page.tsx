@@ -7,12 +7,12 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/app/components/ui/form'
 import { Button } from '@/app/components/ui/button'
 import { Input } from '@/app/components/ui/input'
-import { redirect, useParams, useSearchParams } from "next/navigation"
+import { redirect, useSearchParams } from "next/navigation"
 import Loading from "@/app/components/Loading"
 import { useEffect, useState } from "react"
 import { AlertDestructive } from "@/app/components/adminComponents/Alert"
 
-const formSchema = z.object({
+const loginSchema = z.object({
   username: z.string().min(2, {
     message: "Юзернейм повинен мати більше двох знаків",
   }).max(20, {
@@ -27,11 +27,15 @@ const formSchema = z.object({
 
 export default function Login() {
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: "",
+      password: ""
+    },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof loginSchema>) {
     signIn('credentials',
       {
         username: values.username,
@@ -41,11 +45,13 @@ export default function Login() {
     )
   }
   const searchParams = useSearchParams()
-  const [loginError, setLoginError] = useState(false)
+  const [loginError, setLoginError] = useState<string>()
 
   useEffect(() => {
-    if (searchParams.get('error')) {
-      setLoginError(true)
+    const err = searchParams.get('error')
+    if (err) {
+      console.log(err)
+      setLoginError(err)
     }
   }, [searchParams])
 
@@ -91,7 +97,9 @@ export default function Login() {
           <Button className=" w-60" type="submit" >Увійти</Button>
         </form>
       </Form>
-      {loginError ? <AlertDestructive alert_title="Помилка" alert_descrption="Невірні дані входу"  /> : <></>}
+      {loginError ? <AlertDestructive alert_title="Помилка"
+        alert_descrption={loginError?.startsWith('retry-after') ? `Надто багато спроб. Спробуй через ${loginError.split(":")[1]} хвилин.` :
+          `Невірні дані входу. ${loginError?.startsWith('remaining')? 'Залишилось спроб: ' + loginError.split(":")[1]: ''}`} /> : <></>}
     </main>
   )
 }
