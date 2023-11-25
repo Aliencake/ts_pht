@@ -9,12 +9,25 @@ import { edgeStoreClient } from '../edgestore/[...edgestore]/edgestore';
 
 export async function GET(request: Request) {
     try {
-        const categories: Category[] = await prisma.category.findMany({
-            orderBy: [
-                { index: 'asc' },
-            ]
-        })
-        return NextResponse.json(categories)
+        const session = await getServerSession(authOptions)
+
+        if (!session) {
+            const categories: Category[] = await prisma.category.findMany({
+                orderBy: [
+                    { index: 'asc' },
+                ],
+                where: {isActive: true}
+            })
+            return NextResponse.json(categories)
+        }
+        else {
+            const categories: Category[] = await prisma.category.findMany({
+                orderBy: [
+                    { index: 'asc' },
+                ]
+            })
+            return NextResponse.json(categories)
+        }
     } catch (err) {
         return NextResponse.json(err, {status: 500})
     }

@@ -8,12 +8,25 @@ import { add_social_link_schema, id_schema, update_array_index_schema } from '@/
 
 export async function GET(request: Request) {
     try {
-        const links: Link[] = await prisma.link.findMany({
-            orderBy: [
-                { index: 'asc' },
-            ]
-        })
-        return NextResponse.json(links)
+        const session = await getServerSession(authOptions)
+
+        if (!session) {
+            const links: Link[] = await prisma.link.findMany({
+                orderBy: [
+                    { index: 'asc' },
+                ],
+                where: {isActive: true}
+            })
+            return NextResponse.json(links)
+        }
+        else {
+            const links: Link[] = await prisma.link.findMany({
+                orderBy: [
+                    { index: 'asc' },
+                ]
+            })
+            return NextResponse.json(links)
+        }
     } catch (err) {
         return NextResponse.json(err, {status: 500})
     }

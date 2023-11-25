@@ -10,19 +10,37 @@ export async function GET(request: NextRequest) {
     try {
         const searchParams = request.nextUrl.searchParams
         const query = searchParams.get('Category_ID')
-        const media: Media[] = await prisma.media.findMany({
-            where: {
-                categoryId: Number(query),
-            },
-            orderBy: [
-                { index: 'asc' },
-            ]
-        })
-        return NextResponse.json(media)
-    } catch (err) {
-        console.log(err)
-        return NextResponse.json(err, {status: 500})
+        const session = await getServerSession(authOptions)
+
+        if (!session) {
+            const media: Media[] = await prisma.media.findMany({
+                where: {
+                    categoryId: Number(query),
+                    isActive: true
+                },
+                orderBy: [
+                    { index: 'asc' },
+                ]
+            })
+            return NextResponse.json(media)
+        }
+        else {
+            const media: Media[] = await prisma.media.findMany({
+                where: {
+                    categoryId: Number(query),
+                },
+                orderBy: [
+                    { index: 'asc' },
+                ]
+            })
+            return NextResponse.json(media)
+        }
     }
+    catch (err) {
+        console.log(err)
+        return NextResponse.json(err, { status: 500 })
+    }
+
 }
 
 
@@ -31,7 +49,7 @@ export async function PUT(request: Request, response: Response) {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-            return NextResponse.json('You must be log in!', {status: 401})
+            return NextResponse.json('You must be log in!', { status: 401 })
         }
         const parsedMedia = add_media_schema.parse(await request.json())
         const media: Prisma.MediaCreateInput = {
@@ -47,7 +65,7 @@ export async function PUT(request: Request, response: Response) {
         const savedMedia = await prisma.media.create({ data: media });
         return NextResponse.json(savedMedia)
     } catch (err) {
-        return NextResponse.json(err, {status: 500})
+        return NextResponse.json(err, { status: 500 })
     }
 }
 
@@ -57,7 +75,7 @@ export async function DELETE(request: Request) {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-            return NextResponse.json('You must be log in!', {status: 401})
+            return NextResponse.json('You must be log in!', { status: 401 })
         }
         const media_id = id_schema.parse(await request.json())
         const deleted_media: Media = await prisma.media.delete({
@@ -72,11 +90,11 @@ export async function DELETE(request: Request) {
             else if (deleted_media.type === Type.VIDEO) {
                 await edgeStoreClient.Files.deleteFile({ url: deleted_media.href })
             }
-        }  
+        }
         return NextResponse.json(deleted_media)
     }
     catch (err) {
-        return NextResponse.json(err, {status: 500})
+        return NextResponse.json(err, { status: 500 })
     }
 }
 
@@ -85,7 +103,7 @@ export async function POST(request: Request) {
         const session = await getServerSession(authOptions)
 
         if (!session) {
-            return NextResponse.json('You must be log in!', {status: 401})
+            return NextResponse.json('You must be log in!', { status: 401 })
         }
         const res = await request.json()
         const media = update_array_index_schema.parse(res['data'])
@@ -100,6 +118,6 @@ export async function POST(request: Request) {
         return NextResponse.json(results)
     } catch (err) {
         console.log(err)
-        return NextResponse.json(err, {status: 500})
+        return NextResponse.json(err, { status: 500 })
     }
 }
