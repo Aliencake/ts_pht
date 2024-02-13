@@ -5,7 +5,7 @@ import { headers } from 'next/headers';
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(5, '10 m'),
+  limiter: Ratelimit.slidingWindow(5, '5 m'),
 });
 
 export const authOptions = {
@@ -16,16 +16,12 @@ export const authOptions = {
         username: { label: 'Username', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
+
       async authorize(credentials, req) {
         const headersList = headers();
         const ip = headersList.get('x-forwarded-for') ?? '';
         const { success, reset, remaining } = await ratelimit.limit(ip);
 
-        if (!success) {
-          const now = Date.now();
-          const retryAfter = Math.floor((reset - now) / 1000 / 60);
-          throw new Error(`retry-after:${retryAfter}`);
-        }
         const user = { id: '1', name: `${process.env.ADMIN_USERNAME}` };
 
         if (
@@ -33,8 +29,14 @@ export const authOptions = {
           credentials?.password === process.env.ADMIN_PASSWORD
         ) {
           return user;
-        } else {
-          throw new Error(`remaining:${remaining}`);
+        }
+        else if (!success) {
+          const now = Date.now();
+          const retryAfter = Math.floor((reset - now) / 1000 / 60);
+          throw new Error(`retry-after:${retryAfter}`);
+        } 
+        else {
+          throw new Error(`remaining:${+remaining + 1}`);
         }
       },
     }),

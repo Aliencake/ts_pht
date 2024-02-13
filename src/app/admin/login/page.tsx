@@ -18,6 +18,7 @@ import { redirect, useSearchParams } from 'next/navigation';
 import Loading from '@/app/components/Loading';
 import { useEffect, useState } from 'react';
 import { AlertDestructive } from '@/app/components/adminComponents/Alert';
+import { Loader2 } from 'lucide-react';
 
 const loginSchema = z.object({
   username: z
@@ -47,27 +48,38 @@ export default function Login() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof loginSchema>) {
-    signIn('credentials', {
-      username: values.username,
-      password: values.password,
-      callbackUrl: `/admin`,
-    });
+  const [loading, setLoading] = useState(false);
+
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    setLoading(true);
+    try {
+      await signIn('credentials', {
+        username: values.username,
+        password: values.password,
+        callbackUrl: `/admin`,
+      });
+    } catch (error) {
+      // Handle the error here
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   }
+
   const searchParams = useSearchParams();
   const [loginError, setLoginError] = useState<string>();
 
   useEffect(() => {
     const err = searchParams.get('error');
     if (err) {
-      console.log(err);
       setLoginError(err);
     }
   }, [searchParams]);
 
   const { data: session, status } = useSession();
+  
   if (status === 'loading') {
-    return <Loading></Loading>;
+    return <Loading/>;
   }
   if (session) {
     redirect('/admin');
@@ -118,8 +130,9 @@ export default function Login() {
               </FormItem>
             )}
           />
-          <Button className=" w-60" type="submit">
+          <Button className=" w-60" type="submit" disabled={loading}>
             Увійти
+            {loading ? <Loader2 className="ml-2 h-4 w-4 animate-spin" /> : <></>}
           </Button>
         </form>
       </Form>

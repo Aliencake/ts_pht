@@ -82,7 +82,7 @@ export function AddCategoryDialog({ mutation }: AddCategoryDialogProps) {
                       <FormLabel>Назва</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Телега"
+                          placeholder="Назва категорії"
                           className="col-span-3 w-max"
                           {...field}
                         />
