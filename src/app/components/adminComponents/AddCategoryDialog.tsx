@@ -1,4 +1,4 @@
-import { Button } from "../ui/button"
+import { Button } from '../ui/button';
 import {
   Dialog,
   DialogContent,
@@ -6,44 +6,63 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog"
-import { Input } from "../ui/input"
-import { Loader2 } from "lucide-react"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import { useForm } from "react-hook-form"
-import z from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { add_category_schema } from "../../types"
-import { useState } from "react"
-import { UseMutationResult } from '@tanstack/react-query'
+} from '../ui/dialog';
+import { Input } from '../ui/input';
+import { Loader2 } from 'lucide-react';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../ui/form';
+import { useForm } from 'react-hook-form';
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { add_category_schema } from '../../types';
+import { useState } from 'react';
+import { UseMutationResult } from '@tanstack/react-query';
 
-
-type AddCategoryDialogProps = { mutation: UseMutationResult<any, Error, z.infer<typeof add_category_schema>, unknown> };
-
-
+type AddCategoryDialogProps = {
+  mutation: UseMutationResult<
+    any,
+    Error,
+    z.infer<typeof add_category_schema>,
+    unknown
+  >;
+};
 
 export function AddCategoryDialog({ mutation }: AddCategoryDialogProps) {
   const form = useForm<z.infer<typeof add_category_schema>>({
     resolver: zodResolver(add_category_schema),
     defaultValues: {
-      title: "",
-        },
-  })
-  const [open, setOpen] = useState(false)
-
+      title: '',
+    },
+  });
+  const [open, setOpen] = useState(false);
 
   function onSubmit(values: z.infer<typeof add_category_schema>) {
-    mutation.mutate(values)
-    form.reset()
-    setOpen(false)
+    mutation.mutate(values);
+    form.reset();
+    setOpen(false);
   }
-
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mt-4" disabled={mutation.isPending} variant="outline">
-          {mutation.isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Додаємо</> : <>Додати нову категорію</>}
+        <Button
+          className="mt-4"
+          disabled={mutation.isPending}
+          variant="outline"
+        >
+          {mutation.isPending ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Додаємо
+            </>
+          ) : (
+            <>Додати нову категорію</>
+          )}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -62,7 +81,11 @@ export function AddCategoryDialog({ mutation }: AddCategoryDialogProps) {
                     <FormItem>
                       <FormLabel>Назва</FormLabel>
                       <FormControl>
-                        <Input placeholder="Телега" className="col-span-3 w-max" {...field} />
+                        <Input
+                          placeholder="Телега"
+                          className="col-span-3 w-max"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -77,5 +100,5 @@ export function AddCategoryDialog({ mutation }: AddCategoryDialogProps) {
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
