@@ -3,11 +3,12 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Media, Type } from '@prisma/client';
 import { UseMutationResult } from '@tanstack/react-query';
-import { FileVideo, X } from 'lucide-react';
+import { FileVideo, Loader2, X } from 'lucide-react';
 import { useState } from 'react';
 import { z } from 'zod';
 import { TableCell, TableRow } from '../ui/table';
 import { Checkbox } from '../ui/checkbox';
+import Image from 'next/image';
 
 type SortableMediaProps = {
   item: Media;
@@ -29,6 +30,8 @@ type SortableMediaProps = {
 export default function SortableMedia(props: SortableMediaProps) {
   const [ischecked, setChecked] = useState<boolean>(props.item.isActive);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.item.id });
 
@@ -41,6 +44,10 @@ export default function SortableMedia(props: SortableMediaProps) {
     setChecked(checked);
     props.isActiveMutation.mutate({ _id: props.item.id });
   }
+
+  const handleImageLoad = () => {
+    setIsLoading(false);
+  };
 
   const thumbnail =
     props.item.type === Type.PHOTO ? props.item.thumbnail : false;
@@ -56,9 +63,24 @@ export default function SortableMedia(props: SortableMediaProps) {
       <TableCell className="font-medium">{props.index}</TableCell>
       <TableCell>
         {thumbnail ? (
-          <img className="w-fit" src={thumbnail} alt="thumbnail" />
+          <div className='h-16 w-auto'>
+            {isLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+            <div className="flex justify-center">
+              <Image
+                height={60}
+                width={60}
+                src={thumbnail}
+                alt="thumbnail"
+                onLoad={handleImageLoad}
+                className='rounded-md'
+              />
+            </div>
+          </div>
         ) : (
-          <FileVideo />
+          // 
+          <div className="flex justify-center">
+            <FileVideo className='rounded-md h-14 ' />
+          </div>
         )}
       </TableCell>
       <TableCell className="font-medium">{props.item.type}</TableCell>

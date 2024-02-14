@@ -29,13 +29,11 @@ export const authOptions = {
           credentials?.password === process.env.ADMIN_PASSWORD
         ) {
           return user;
-        }
-        else if (!success) {
+        } else if (!success) {
           const now = Date.now();
           const retryAfter = Math.floor((reset - now) / 1000 / 60);
           throw new Error(`retry-after:${retryAfter}`);
-        } 
-        else {
+        } else {
           throw new Error(`remaining:${+remaining + 1}`);
         }
       },

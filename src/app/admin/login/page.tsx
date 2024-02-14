@@ -77,9 +77,9 @@ export default function Login() {
   }, [searchParams]);
 
   const { data: session, status } = useSession();
-  
+
   if (status === 'loading') {
-    return <Loading/>;
+    return <Loading />;
   }
   if (session) {
     redirect('/admin');
@@ -132,7 +132,11 @@ export default function Login() {
           />
           <Button className=" w-60" type="submit" disabled={loading}>
             Увійти
-            {loading ? <Loader2 className="ml-2 h-4 w-4 animate-spin" /> : <></>}
+            {loading ? (
+              <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+            ) : (
+              <></>
+            )}
           </Button>
         </form>
       </Form>

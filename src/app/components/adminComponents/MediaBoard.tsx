@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table';
-import { AlertCircle, FolderOpen } from 'lucide-react';
+import { AlertCircle, FolderOpen, Loader2 } from 'lucide-react';
 
 import { MultiFileDropzoneUsage } from './UploadFiles';
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
@@ -176,7 +176,9 @@ export function MediaBoardDialog(props: MediaBoardDialogProps) {
     retry: 10,
   });
 
-  if (isLoading) return;
+  if (isLoading) {
+    return <Loader2 className="ml-2 h-4 w-4 animate-spin" />;
+  }
 
   if (error) {
     console.log(error);
