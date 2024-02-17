@@ -10,9 +10,9 @@
 
 ## Installation
 
-`git clone https://github.com/ferbiy/arbitrager.git`
+`git clone https://github.com/Aliencake/ts_pht.git`
 
-`cd arbitrager`
+`cd ts_pht`
 
 `cp .env.example .env` and fill with your data
 
