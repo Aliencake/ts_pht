@@ -30,7 +30,7 @@ export default function Page() {
     <QueryClientProvider client={queryClient}>
       <main className="flex flex-col sm:items-center space-y-6">
         <NavBar />
-        <Tabs defaultValue="categories" className='static sm:items-center'>
+        <Tabs defaultValue="categories" className="static sm:items-center">
           <TabsList>
             <TabsTrigger value="categories">Категорії та медіа</TabsTrigger>
             <TabsTrigger value="links">Посилання</TabsTrigger>

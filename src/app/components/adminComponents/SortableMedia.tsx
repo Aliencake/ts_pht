@@ -63,7 +63,7 @@ export default function SortableMedia(props: SortableMediaProps) {
       <TableCell className="font-medium">{props.index}</TableCell>
       <TableCell>
         {thumbnail ? (
-          <div className='h-16 w-auto'>
+          <div className="h-16 w-auto">
             {isLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
             <div className="flex justify-center">
               <Image
@@ -72,14 +72,14 @@ export default function SortableMedia(props: SortableMediaProps) {
                 src={thumbnail}
                 alt="thumbnail"
                 onLoad={handleImageLoad}
-                className='rounded-md'
+                className="rounded-md"
               />
             </div>
           </div>
         ) : (
-          // 
+          //
           <div className="flex justify-center">
-            <FileVideo className='rounded-md h-14 ' />
+            <FileVideo className="rounded-md h-14 " />
           </div>
         )}
       </TableCell>
