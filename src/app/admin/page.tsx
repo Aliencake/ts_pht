@@ -28,23 +28,27 @@ export default function Page() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <main className="flex flex-col sm:items-center space-y-6">
+      <main className="flex flex-col sm:items-center h-full space-y-6">
         <NavBar />
-        <Tabs defaultValue="categories" className="static sm:items-center">
-          <TabsList>
-            <TabsTrigger value="categories">Категорії та медіа</TabsTrigger>
-            <TabsTrigger value="links">Посилання</TabsTrigger>
-            <TabsTrigger value="activity">Активність</TabsTrigger>
-          </TabsList>
-          <TabsContent value="categories" className="absolute">
-            <CategoriesBoard queryClient={queryClient} />
-          </TabsContent>
-          <TabsContent value="links" className="absolute">
-            <LinksBoard queryClient={queryClient} />
-          </TabsContent>
-          <TabsContent value="activity" className="absolute">
-            Тут буде активність сайту
-          </TabsContent>
+        <Tabs defaultValue="categories">
+          <div className="overflow-auto flex flex-col items-center">
+            <TabsList>
+              <TabsTrigger value="categories">Категорії та медіа</TabsTrigger>
+              <TabsTrigger value="links">Посилання</TabsTrigger>
+              <TabsTrigger value="activity">Активність</TabsTrigger>
+            </TabsList>
+          </div>
+          <div className="overflow-auto">
+            <TabsContent value="categories">
+              <CategoriesBoard queryClient={queryClient} />
+            </TabsContent>
+            <TabsContent value="links">
+              <LinksBoard queryClient={queryClient} />
+            </TabsContent>
+            <TabsContent value="activity">
+              Тут буде активність сайту
+            </TabsContent>
+          </div>
         </Tabs>
       </main>
     </QueryClientProvider>
