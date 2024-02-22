@@ -2,8 +2,9 @@
 
 import Image from 'next/image';
 import LinksPage from './Links';
+import ArrowIcon from './NavArrow';
 
-import { Keyboard, Mousewheel } from 'swiper/modules';
+import { Keyboard, Mousewheel, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types';
 import { Category, Link, Media } from '@prisma/client';
@@ -30,10 +31,13 @@ const veticalSwiperParams: SwiperOptions = {
 };
 
 const horizontalSwiperParams: SwiperOptions = {
-  modules: [Keyboard],
+  modules: [Keyboard, Navigation],
+  navigation: {
+    nextEl: '#swiper-button-next',
+    prevEl: '#swiper-button-prev',
+  },
   loop: true,
   keyboard: true,
-  navigation: true,
   longSwipesRatio: 0.1,
   spaceBetween: 0,
   direction: 'horizontal',
@@ -44,7 +48,6 @@ const horizontalSwiperParams: SwiperOptions = {
       slidesPerView: 2,
     },
   },
-  slideToClickedSlide: true,
 };
 
 export default function ImageSlider(props: SwiperPageProps) {
@@ -80,6 +83,22 @@ export default function ImageSlider(props: SwiperPageProps) {
                     )}
                   </SwiperSlide>
                 ))}
+            <div
+              id="swiper-button-prev"
+              className="absolute inset-y-0 left-0 z-[1] flex w-[10%] cursor-pointer items-center"
+            >
+              <ArrowIcon width={40} height={40} className="opacity-75" />
+            </div>
+            <div
+              id="swiper-button-next"
+              className="absolute inset-y-0 right-0 z-[1] flex w-[10%] cursor-pointer items-center"
+            >
+              <ArrowIcon
+                width={40}
+                height={40}
+                className="opacity-75 rotate-180 right-0 absolute "
+              />
+            </div>
           </Swiper>
         </SwiperSlide>
       ))}
