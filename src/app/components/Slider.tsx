@@ -4,22 +4,25 @@ import Image from 'next/image';
 import LinksPage from './Links';
 import ArrowIcon from './NavArrow';
 
-import { Keyboard, Mousewheel, Navigation } from 'swiper/modules';
+import { Keyboard, Mousewheel, Navigation, HashNavigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types';
 import { Category, Link, Media } from '@prisma/client';
+import { useEffect, useState } from 'react';
 
 import 'swiper/css';
 import './swiper.css';
+import 'swiper/css/hash-navigation';
+import Header from './Header';
 
 type SwiperPageProps = {
-  categories: Category[] | null;
-  media: Media[] | null;
-  links: Link[] | null;
+  categories: Category[];
+  media: Media[];
+  links: Link[];
 };
 
 const veticalSwiperParams: SwiperOptions = {
-  modules: [Mousewheel, Keyboard],
+  modules: [Mousewheel, Keyboard, HashNavigation],
   keyboard: true,
   mousewheel: true,
   direction: 'vertical',
@@ -28,6 +31,10 @@ const veticalSwiperParams: SwiperOptions = {
   edgeSwipeThreshold: 40,
   lazyPreloadPrevNext: 2,
   resistanceRatio: 0,
+  hashNavigation: {
+    watchState: true,    
+    replaceState: false,
+  },
 };
 
 const horizontalSwiperParams: SwiperOptions = {
@@ -51,10 +58,17 @@ const horizontalSwiperParams: SwiperOptions = {
 };
 
 export default function ImageSlider(props: SwiperPageProps) {
+  const [currentCategory, setCurrentCategory] = useState(0);
+
+
+  function handleCategoryChange({ realIndex }: { realIndex: number }) {
+    setCurrentCategory(realIndex);
+  }
+
   return (
-    <Swiper {...veticalSwiperParams}>
+    <Swiper {...veticalSwiperParams} onSlideChange={handleCategoryChange}>
       {props.categories?.map((category, index) => (
-        <SwiperSlide key={index}>
+        <SwiperSlide key={index} data-hash={encodeURIComponent(category.title)}>
           <Swiper {...horizontalSwiperParams}>
             {props.media &&
               props.media
@@ -102,9 +116,10 @@ export default function ImageSlider(props: SwiperPageProps) {
           </Swiper>
         </SwiperSlide>
       ))}
-      <SwiperSlide key="links">
+      <SwiperSlide key="links" data-hash="links">
         <LinksPage links={props.links} />
       </SwiperSlide>
+      <Header className='flex absolute top-0 left-[50%] z-[1]' categories={props.categories} currentCategory={currentCategory} />
     </Swiper>
   );
 }
