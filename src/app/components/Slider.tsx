@@ -4,11 +4,16 @@ import Image from 'next/image';
 import LinksPage from './Links';
 import ArrowIcon from './NavArrow';
 
-import { Keyboard, Mousewheel, Navigation, HashNavigation } from 'swiper/modules';
+import {
+  Keyboard,
+  Mousewheel,
+  Navigation,
+  HashNavigation,
+} from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types';
 import { Category, Link, Media } from '@prisma/client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import 'swiper/css';
 import './swiper.css';
@@ -32,7 +37,7 @@ const veticalSwiperParams: SwiperOptions = {
   lazyPreloadPrevNext: 2,
   resistanceRatio: 0,
   hashNavigation: {
-    watchState: true,    
+    watchState: true,
     replaceState: false,
   },
 };
@@ -59,7 +64,6 @@ const horizontalSwiperParams: SwiperOptions = {
 
 export default function ImageSlider(props: SwiperPageProps) {
   const [currentCategory, setCurrentCategory] = useState(0);
-
 
   function handleCategoryChange({ realIndex }: { realIndex: number }) {
     setCurrentCategory(realIndex);
@@ -119,7 +123,11 @@ export default function ImageSlider(props: SwiperPageProps) {
       <SwiperSlide key="links" data-hash="links">
         <LinksPage links={props.links} />
       </SwiperSlide>
-      <Header className='flex absolute top-0 left-[50%] z-[1]' categories={props.categories} currentCategory={currentCategory} />
+      <Header
+        className="flex flex-col items-center absolute top-0 left-[50%] z-[1]"
+        categories={props.categories}
+        currentCategory={currentCategory}
+      />
     </Swiper>
   );
 }
