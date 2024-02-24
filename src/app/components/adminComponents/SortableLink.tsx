@@ -4,10 +4,8 @@ import { CSS } from '@dnd-kit/utilities';
 import { Link } from '@prisma/client';
 import { UseMutationResult } from '@tanstack/react-query';
 import { ExternalLink, X } from 'lucide-react';
-import { useState } from 'react';
 import { z } from 'zod';
 import { TableCell, TableRow } from '../ui/table';
-import { Checkbox } from '../ui/checkbox';
 
 type SortableLinkProps = {
   item: Link;
@@ -17,18 +15,10 @@ type SortableLinkProps = {
     z.infer<typeof id_schema>,
     unknown
   >;
-  isActiveMutation: UseMutationResult<
-    any,
-    Error,
-    z.infer<typeof id_schema>,
-    unknown
-  >;
   index: number;
 };
 
 export default function SortableLink(props: SortableLinkProps) {
-  const [ischecked, setChecked] = useState<boolean>(props.item.isActive);
-
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.item.id });
 
@@ -36,11 +26,6 @@ export default function SortableLink(props: SortableLinkProps) {
     transform: CSS.Transform.toString(transform),
     transition,
   };
-
-  function onChecked(checked: boolean) {
-    setChecked(checked);
-    props.isActiveMutation.mutate({ _id: props.item.id });
-  }
 
   return (
     <TableRow
@@ -50,28 +35,28 @@ export default function SortableLink(props: SortableLinkProps) {
       {...attributes}
       {...listeners}
     >
-      <TableCell className="font-medium">{props.index}</TableCell>
-      <TableCell className="font-medium">{props.item.title}</TableCell>
-      <TableCell>
-        <a target="_blank" href={props.item.href}>
-          <ExternalLink size={18} color="#000000" />
-        </a>
+      <TableCell className="font-medium">
+        {props.index}
       </TableCell>
-      <TableCell className="">
-        <Checkbox
-          checked={ischecked}
-          onCheckedChange={onChecked}
-          id={'ch' + props.item.title}
-        />
+      <TableCell className="font-medium max-w-11 truncate">
+        {props.item.title}
       </TableCell>
       <TableCell>
-        <X
-          className="float-right"
-          size={18}
-          onClick={() => {
-            props.deleteLinksMutation.mutate({ _id: props.item.id });
-          }}
-        />
+        <div className="flex justify-center ">
+          <a target="_blank" href={props.item.href}>
+            <ExternalLink size={18} color="#000000" />
+          </a>
+        </div>
+      </TableCell>
+      <TableCell>
+        <div className="flex justify-center">
+          <X
+            size={18}
+            onClick={() => {
+              props.deleteLinksMutation.mutate({ _id: props.item.id });
+            }}
+          />
+        </div>
       </TableCell>
     </TableRow>
   );

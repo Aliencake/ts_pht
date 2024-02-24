@@ -6,7 +6,6 @@ export async function getCategories() {
   try {
     const categories: Category[] = await prisma.category.findMany({
       orderBy: [{ index: 'asc' }],
-      where: { isActive: true },
     });
     return categories;
   } catch (err) {
@@ -19,7 +18,6 @@ export async function getMedia() {
   try {
     const media: Media[] = await prisma.media.findMany({
       orderBy: [{ index: 'asc' }],
-      where: { isActive: true },
     });
     return media;
   } catch (err) {
@@ -32,10 +30,22 @@ export async function getLinks() {
   try {
     const links: Link[] = await prisma.link.findMany({
       orderBy: [{ index: 'asc' }],
-      where: { isActive: true },
     });
     return links;
   } catch (err) {
     throw new Error(`${err}`);
   }
 }
+
+// const categories = await prisma.category.findMany({
+//   orderBy: [{ index: 'asc' }],
+// });
+
+// await prisma.$transaction(
+//   categories.map((category, index) =>
+//     prisma.category.update({
+//       where: { id: category.id },
+//       data: { index: category.isActive ? index : categories.length + 1},
+//     }),
+//   ),
+// );

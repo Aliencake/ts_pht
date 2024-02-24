@@ -101,16 +101,6 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
     },
   });
 
-  const IsActiveLinksMutation = useMutation({
-    mutationFn: async (form: z.infer<typeof id_schema>) => {
-      const res = await axios.put('api/links/active', { data: form });
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['links'] });
-    },
-  });
-
   const { data, error, isLoading } = useQuery({
     queryKey: ['links'],
     queryFn: async () => {
@@ -174,7 +164,6 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
                   <TableHead>Індекс</TableHead>
                   <TableHead className="w-[100px]">Назва</TableHead>
                   <TableHead>Посилання</TableHead>
-                  <TableHead>Активне</TableHead>
                   <TableHead className="text-right">Видалити</TableHead>
                 </TableRow>
               </TableHeader>
@@ -184,7 +173,6 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
                     key={item.id}
                     item={item}
                     deleteLinksMutation={DeleteLinksMutation}
-                    isActiveMutation={IsActiveLinksMutation}
                     index={index + 1}
                   />
                 ))}

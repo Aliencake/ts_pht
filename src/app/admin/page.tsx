@@ -40,7 +40,7 @@ export default function Page() {
           </div>
           <div className="overflow-auto">
             <TabsContent value="categories">
-              <CategoriesBoard queryClient={queryClient} />
+              <CategoriesBoard />
             </TabsContent>
             <TabsContent value="links">
               <LinksBoard queryClient={queryClient} />

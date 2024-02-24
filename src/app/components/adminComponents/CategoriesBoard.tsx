@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { useState } from 'react';
 import { Category } from '@prisma/client';
@@ -36,15 +36,16 @@ import {
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers';
 import { AddCategoryDialog } from './AddCategoryDialog';
+import { useQueryClient } from '@tanstack/react-query';
 
 const SortableCategory = dynamic(() => import('./SortableCategory'), {
   ssr: false,
 });
 
-type CategoriesBoardProps = { queryClient: QueryClient };
-
-export default function CategoriesBoard({ queryClient }: CategoriesBoardProps) {
+export default function CategoriesBoard() {
   const [categories, setCategories] = useState<Category[]>();
+
+  const queryClient = useQueryClient();
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -94,16 +95,6 @@ export default function CategoriesBoard({ queryClient }: CategoriesBoardProps) {
   const UpdateCategoriesMutation = useMutation({
     mutationFn: async (form: z.infer<typeof update_array_index_schema>) => {
       const res = await axios.post('api/categories', { data: form });
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-    },
-  });
-
-  const IsActiveCategoriesMutation = useMutation({
-    mutationFn: async (form: z.infer<typeof id_schema>) => {
-      const res = await axios.put('api/categories/active', { data: form });
       return res.data;
     },
     onSuccess: () => {
@@ -179,10 +170,9 @@ export default function CategoriesBoard({ queryClient }: CategoriesBoardProps) {
               <TableHeader>
                 <TableRow>
                   <TableHead>Індекс</TableHead>
-                  <TableHead className="w-[100px]">Назва</TableHead>
-                  <TableHead className="w-[100px]">Медіа</TableHead>
-                  <TableHead>Активне</TableHead>
-                  <TableHead className="text-right">Видалити</TableHead>
+                  <TableHead>Назва</TableHead>
+                  <TableHead>Медіа</TableHead>
+                  <TableHead>Видалити</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -191,9 +181,7 @@ export default function CategoriesBoard({ queryClient }: CategoriesBoardProps) {
                     key={item.id}
                     item={item}
                     deleteLinksMutation={DeleteCategoriesMutation}
-                    isActiveMutation={IsActiveCategoriesMutation}
                     index={index + 1}
-                    queryClient={queryClient}
                   />
                 ))}
               </TableBody>

@@ -160,7 +160,7 @@ const MultiFileDropzone = forwardRef<HTMLInputElement, InputProps>(
               {customError ?? errorMessage}
             </div>
           </div>
-
+          <div className='overflow-y-auto max-h-36'>
           {/* Selected Files */}
           {value?.map(({ file, progress }, i) => (
             <div
@@ -205,7 +205,9 @@ const MultiFileDropzone = forwardRef<HTMLInputElement, InputProps>(
               )}
             </div>
           ))}
+          </div>
         </div>
+
       </div>
     );
   },

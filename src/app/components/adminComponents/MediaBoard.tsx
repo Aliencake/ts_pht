@@ -16,7 +16,7 @@ import {
 import { AlertCircle, FolderOpen, Loader2 } from 'lucide-react';
 
 import { MultiFileDropzoneUsage } from './UploadFiles';
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   add_media_schema,
   id_schema,
@@ -45,9 +45,8 @@ import {
 import { Skeleton } from '../ui/skeleton';
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { useEdgeStore } from '@/lib/edgestore';
 
-type MediaBoardDialogProps = { category: Category; queryClient: QueryClient };
+type MediaBoardDialogProps = { category: Category };
 
 const SortableMedia = dynamic(() => import('./SortableMedia'), {
   ssr: false,
@@ -55,7 +54,8 @@ const SortableMedia = dynamic(() => import('./SortableMedia'), {
 
 export function MediaBoardDialog(props: MediaBoardDialogProps) {
   const [media, setMedia] = useState<Media[]>();
-  const { edgestore } = useEdgeStore();
+
+  const queryClient = useQueryClient();
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -76,11 +76,11 @@ export function MediaBoardDialog(props: MediaBoardDialogProps) {
       return res.data;
     },
     onMutate: async (form) => {
-      await props.queryClient.cancelQueries({
-        queryKey: [`media${props.category.id}`],
+      await queryClient.cancelQueries({
+        queryKey: ['media', props.category.id],
       });
 
-      const previousCategories = props.queryClient.getQueryData([
+      const previousCategories = queryClient.getQueryData([
         `media${props.category.id}`,
       ]);
 
@@ -89,8 +89,8 @@ export function MediaBoardDialog(props: MediaBoardDialogProps) {
       return previousCategories;
     },
     onSuccess: () => {
-      props.queryClient.invalidateQueries({
-        queryKey: [`media${props.category.id}`],
+      queryClient.invalidateQueries({
+        queryKey: ['media', props.category.id],
       });
     },
   });
@@ -101,20 +101,8 @@ export function MediaBoardDialog(props: MediaBoardDialogProps) {
       return res.data;
     },
     onSuccess: () => {
-      props.queryClient.invalidateQueries({
-        queryKey: [`media${props.category.id}`],
-      });
-    },
-  });
-
-  const IsActiveMediasMutation = useMutation({
-    mutationFn: async (form: z.infer<typeof id_schema>) => {
-      const res = await axios.put('api/media/active', { data: form });
-      return res.data;
-    },
-    onSuccess: () => {
-      props.queryClient.invalidateQueries({
-        queryKey: [`media${props.category.id}`],
+      queryClient.invalidateQueries({
+        queryKey: ['media', props.category.id],
       });
     },
   });
@@ -128,8 +116,8 @@ export function MediaBoardDialog(props: MediaBoardDialogProps) {
       return res.data;
     },
     onSuccess: () => {
-      props.queryClient.invalidateQueries({
-        queryKey: [`media${props.category.id}`],
+      queryClient.invalidateQueries({
+        queryKey: ['media', props.category.id],
       });
     },
   });
@@ -161,7 +149,7 @@ export function MediaBoardDialog(props: MediaBoardDialogProps) {
   }
 
   const { data, error, isLoading } = useQuery({
-    queryKey: [`media${props.category.id}`],
+    queryKey: ['media', props.category.id],
     queryFn: async () => {
       const res = await axios
         .get('api/media', {
@@ -208,8 +196,7 @@ export function MediaBoardDialog(props: MediaBoardDialogProps) {
               <TableHead>Індекс</TableHead>
               <TableHead>Превью</TableHead>
               <TableHead>Тип</TableHead>
-              <TableHead>Активне</TableHead>
-              <TableHead className="text-right">Видалити</TableHead>
+              <TableHead>Видалити</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -229,7 +216,6 @@ export function MediaBoardDialog(props: MediaBoardDialogProps) {
                       key={item.id}
                       item={item}
                       deleteMediaMutation={DeleteMediaMutation}
-                      isActiveMutation={IsActiveMediasMutation}
                       index={index + 1}
                     />
                   ))}
