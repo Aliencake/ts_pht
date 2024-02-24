@@ -36,16 +36,3 @@ export async function getLinks() {
     throw new Error(`${err}`);
   }
 }
-
-// const categories = await prisma.category.findMany({
-//   orderBy: [{ index: 'asc' }],
-// });
-
-// await prisma.$transaction(
-//   categories.map((category, index) =>
-//     prisma.category.update({
-//       where: { id: category.id },
-//       data: { index: category.isActive ? index : categories.length + 1},
-//     }),
-//   ),
-// );

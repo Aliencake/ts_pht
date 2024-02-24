@@ -16,7 +16,6 @@ export async function GET(request: Request) {
     if (!session) {
       const links: Link[] = await prisma.link.findMany({
         orderBy: [{ index: 'asc' }],
-        where: { isActive: true },
       });
       return NextResponse.json(links);
     } else {

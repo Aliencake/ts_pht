@@ -31,4 +31,5 @@ export const add_media_schema = z.object({
   thumbnail: z.optional(z.string().url()),
   categoryid: z.number(),
   type: z.enum(['PHOTO', 'VIDEO']),
+  size: z.number(),
 });

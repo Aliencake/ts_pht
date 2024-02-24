@@ -68,6 +68,7 @@ export function MultiFileDropzoneUsage(props: MultiFileDropzoneUsageProps) {
                       thumbnail: res.thumbnailUrl
                         ? res.thumbnailUrl
                         : undefined,
+                      size: res.size,
                     };
                     props.mutation.mutate(media);
                   }
@@ -90,6 +91,7 @@ export function MultiFileDropzoneUsage(props: MultiFileDropzoneUsageProps) {
                       type: Type.VIDEO,
                       categoryid: props.categoryId,
                       thumbnail: undefined,
+                      size: res.size,
                     };
                     props.mutation.mutate(media);
                   }

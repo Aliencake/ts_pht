@@ -51,31 +51,30 @@ export default function SortableMedia(props: SortableMediaProps) {
         {thumbnail ? (
           <div className="h-16 w-auto">
             {isLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
-              <Image
-                height={50}
-                width={50}
-                src={thumbnail}
-                alt="thumbnail"
-                onLoad={handleImageLoad}
-                className="rounded-md"
-              />
+            <Image
+              height={50}
+              width={50}
+              src={thumbnail}
+              alt="thumbnail"
+              onLoad={handleImageLoad}
+              className="rounded-md"
+            />
           </div>
         ) : (
-            <FileVideo className="rounded-md h-14 " />
+          <FileVideo className="rounded-md h-14 " />
         )}
       </TableCell>
       <TableCell className="font-medium">{props.item.type}</TableCell>
       <TableCell>
-      <div className="flex justify-center">
-
-        <X
-          className="float-right"
-          size={18}
-          onClick={() => {
-            props.deleteMediaMutation.mutate({ _id: props.item.id });
-          }}
-        />
-      </div>
+        <div className="flex justify-center">
+          <X
+            className="float-right"
+            size={18}
+            onClick={() => {
+              props.deleteMediaMutation.mutate({ _id: props.item.id });
+            }}
+          />
+        </div>
       </TableCell>
     </TableRow>
   );

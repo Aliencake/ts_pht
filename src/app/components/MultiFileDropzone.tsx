@@ -160,54 +160,53 @@ const MultiFileDropzone = forwardRef<HTMLInputElement, InputProps>(
               {customError ?? errorMessage}
             </div>
           </div>
-          <div className='overflow-y-auto max-h-36'>
-          {/* Selected Files */}
-          {value?.map(({ file, progress }, i) => (
-            <div
-              key={i}
-              className="flex h-16 w-96 max-w-[100vw] flex-col justify-center rounded border border-gray-300 px-4 py-2"
-            >
-              <div className="flex items-center gap-2 text-gray-500 dark:text-white">
-                <FileIcon size="30" className="shrink-0" />
-                <div className="min-w-0 text-sm">
-                  <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
-                    {file.name}
+          <div className="overflow-y-auto max-h-36">
+            {/* Selected Files */}
+            {value?.map(({ file, progress }, i) => (
+              <div
+                key={i}
+                className="flex h-16 w-96 max-w-[100vw] flex-col justify-center rounded border border-gray-300 px-4 py-2"
+              >
+                <div className="flex items-center gap-2 text-gray-500 dark:text-white">
+                  <FileIcon size="30" className="shrink-0" />
+                  <div className="min-w-0 text-sm">
+                    <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
+                      {file.name}
+                    </div>
+                    <div className="text-xs text-gray-400 dark:text-gray-400">
+                      {formatFileSize(file.size)}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-400 dark:text-gray-400">
-                    {formatFileSize(file.size)}
+                  <div className="grow" />
+                  <div className="flex w-12 justify-end text-xs">
+                    {progress === 'PENDING' ? (
+                      <></>
+                    ) : progress === 'ERROR' ? (
+                      <LucideFileWarning className="shrink-0 text-red-600 dark:text-red-400" />
+                    ) : progress !== 'COMPLETE' ? (
+                      <div>{Math.round(progress)}%</div>
+                    ) : (
+                      <CheckCircle2 className="shrink-0 text-green-600 dark:text-gray-400" />
+                    )}
                   </div>
                 </div>
-                <div className="grow" />
-                <div className="flex w-12 justify-end text-xs">
-                  {progress === 'PENDING' ? (
-                    <></>
-                  ) : progress === 'ERROR' ? (
-                    <LucideFileWarning className="shrink-0 text-red-600 dark:text-red-400" />
-                  ) : progress !== 'COMPLETE' ? (
-                    <div>{Math.round(progress)}%</div>
-                  ) : (
-                    <CheckCircle2 className="shrink-0 text-green-600 dark:text-gray-400" />
-                  )}
-                </div>
+                {/* Progress Bar */}
+                {typeof progress === 'number' && (
+                  <div className="relative h-0">
+                    <div className="absolute top-1 h-1 w-full overflow-clip rounded-full bg-gray-200 dark:bg-gray-700">
+                      <div
+                        className="h-full bg-gray-400 transition-all duration-300 ease-in-out dark:bg-white"
+                        style={{
+                          width: progress ? `${progress}%` : '0%',
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
-              {/* Progress Bar */}
-              {typeof progress === 'number' && (
-                <div className="relative h-0">
-                  <div className="absolute top-1 h-1 w-full overflow-clip rounded-full bg-gray-200 dark:bg-gray-700">
-                    <div
-                      className="h-full bg-gray-400 transition-all duration-300 ease-in-out dark:bg-white"
-                      style={{
-                        width: progress ? `${progress}%` : '0%',
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
+            ))}
           </div>
         </div>
-
       </div>
     );
   },

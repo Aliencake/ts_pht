@@ -35,9 +35,7 @@ export default function SortableLink(props: SortableLinkProps) {
       {...attributes}
       {...listeners}
     >
-      <TableCell className="font-medium">
-        {props.index}
-      </TableCell>
+      <TableCell className="font-medium">{props.index}</TableCell>
       <TableCell className="font-medium max-w-11 truncate">
         {props.item.title}
       </TableCell>

@@ -17,7 +17,6 @@ export async function GET(request: Request) {
     if (!session) {
       const categories: Category[] = await prisma.category.findMany({
         orderBy: [{ index: 'asc' }],
-        where: { isActive: true },
       });
       return NextResponse.json(categories);
     } else {
@@ -41,7 +40,13 @@ export async function PUT(request: Request, response: Response) {
     const category: Prisma.CategoryCreateInput = add_category_schema.parse(
       await request.json(),
     );
-    const savedCategory = await prisma.category.create({ data: category });
+
+    const last_category = await prisma.category.findFirst({
+      orderBy: [{ index: 'desc' }],
+    });
+
+    const savedCategory = await prisma.category.create({ data: {...category, index: last_category? last_category?.index + 1: 0} });
+
     return NextResponse.json(savedCategory);
   } catch (err) {
     return NextResponse.json(err, { status: 500 });
@@ -63,10 +68,10 @@ export async function DELETE(request: Request) {
       orderBy: [{ index: 'asc' }],
     });
     if (media && media.length) {
-      console.log('deleting media');
       media.map(async (item) => {
         if (item.type === Type.PHOTO) {
           await edgeStoreClient.Photos.deleteFile({ url: item.href });
+          await new Promise((resolve) => setTimeout(resolve, 1000));
         } else if (item.type === Type.VIDEO) {
           await edgeStoreClient.Files.deleteFile({ url: item.href });
         }
@@ -82,6 +87,21 @@ export async function DELETE(request: Request) {
         id: category_id._id,
       },
     });
+    
+    const categories = await prisma.category.findMany({
+  orderBy: [{ index: 'asc' }],
+});
+
+await prisma.$transaction(
+  categories.map((category, index) =>
+    prisma.category.update({
+      where: { id: category.id },
+      data: { index: index},
+    }),
+  ),
+);
+
+    
     return NextResponse.json(deleted_category);
   } catch (err) {
     return NextResponse.json(err, { status: 500 });

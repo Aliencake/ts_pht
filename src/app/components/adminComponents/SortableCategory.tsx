@@ -36,9 +36,7 @@ export default function SortableCategory(props: SortableCategoryProps) {
       {...attributes}
       {...listeners}
     >
-      <TableCell className="font-medium">
-        {props.index}
-      </TableCell>
+      <TableCell className="font-medium">{props.index}</TableCell>
       <TableCell className="font-medium">{props.item.title}</TableCell>
       <TableCell className="">
         <div className="flex justify-center">

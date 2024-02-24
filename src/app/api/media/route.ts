@@ -20,7 +20,6 @@ export async function GET(request: NextRequest) {
       const media: Media[] = await prisma.media.findMany({
         where: {
           categoryId: Number(query),
-          isActive: true,
         },
         orderBy: [{ index: 'asc' }],
       });
@@ -57,6 +56,7 @@ export async function PUT(request: Request, response: Response) {
           id: parsedMedia.categoryid,
         },
       },
+      size: parsedMedia.size,
     };
     const savedMedia = await prisma.media.create({ data: media });
     return NextResponse.json(savedMedia);
