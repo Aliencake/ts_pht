@@ -10,6 +10,8 @@ import {
 } from '@/app/types';
 import { edgeStoreClient } from '../edgestore/[...edgestore]/edgestore';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
   try {
     const session = await getServerSession(authOptions);

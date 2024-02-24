@@ -9,6 +9,8 @@ import {
   update_array_index_schema,
 } from '@/app/types';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
   try {
     const session = await getServerSession(authOptions);

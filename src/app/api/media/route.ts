@@ -10,6 +10,8 @@ import {
 } from '@/app/types';
 import { edgeStoreClient } from '../edgestore/[...edgestore]/edgestore';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -27,15 +29,14 @@ export async function GET(request: NextRequest) {
           orderBy: [{ index: 'asc' }],
         });
         return NextResponse.json(media);
-      }
-      else {
+      } else {
         const media: Media[] = await prisma.media.findMany({
           where: {
             categoryId: Number(query),
           },
           orderBy: [{ index: 'asc' }],
         });
-      return NextResponse.json(media);
+        return NextResponse.json(media);
       }
     }
   } catch (err) {

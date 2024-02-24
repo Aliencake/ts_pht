@@ -12,6 +12,7 @@ import {
   TabsTrigger,
 } from '../components/ui/tabs';
 import CategoriesBoard from '../components/adminComponents/CategoriesBoard';
+import Settings from '../components/adminComponents/Settings';
 
 const queryClient = new QueryClient();
 
@@ -46,7 +47,7 @@ export default function Page() {
               <LinksBoard queryClient={queryClient} />
             </TabsContent>
             <TabsContent value="activity">
-              Тут буде активність сайту
+              <Settings />
             </TabsContent>
           </div>
         </Tabs>

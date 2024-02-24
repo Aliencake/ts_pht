@@ -36,6 +36,12 @@ model Media {
   size Int @default(0)
 }
 
+model Settings {
+  id Int @id @default(autoincrement())
+  autoPlay Boolean @default(false)
+  autoPlayDelay Int @default(5)
+}
+
 enum Type {
   PHOTO
   VIDEO

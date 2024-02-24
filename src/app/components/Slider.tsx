@@ -102,13 +102,12 @@ export default function ImageSlider() {
       </div>
     );
   }
-  
+
   const [media, categories, links] = results.data as [
     Media[],
     Category[],
     Link[],
   ];
-
 
   function handleCategoryChange({ realIndex }: { realIndex: number }) {
     setCurrentCategory(realIndex);
@@ -131,7 +130,7 @@ export default function ImageSlider() {
                         loading="lazy"
                         alt={'photo slide ' + index}
                         className="object-cover pointer-events-none"
-                        sizes='(max-width: 850px) 100vw, 50vw'
+                        sizes="(max-width: 850px) 100vw, 50vw"
                       />
                     ) : (
                       <video
