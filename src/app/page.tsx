@@ -1,16 +1,16 @@
-import ImageSlider from './components/Slider';
-import { getCategories, getLinks, getMedia } from '@/lib/actions';
+'use client';
 
-export default async function Home() {
-  const [categories, media, links] = await Promise.all([
-    getCategories(),
-    getMedia(),
-    getLinks(),
-  ]);
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import ImageSlider from './components/Slider';
+
+export default function Home() {
+  const queryClient = new QueryClient();
 
   return (
     <main>
-      <ImageSlider categories={categories} media={media} links={links} />
+      <QueryClientProvider client={queryClient}>
+        <ImageSlider />
+      </QueryClientProvider>
     </main>
   );
 }

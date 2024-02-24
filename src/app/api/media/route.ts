@@ -18,20 +18,25 @@ export async function GET(request: NextRequest) {
 
     if (!session) {
       const media: Media[] = await prisma.media.findMany({
-        where: {
-          categoryId: Number(query),
-        },
         orderBy: [{ index: 'asc' }],
       });
       return NextResponse.json(media);
     } else {
-      const media: Media[] = await prisma.media.findMany({
-        where: {
-          categoryId: Number(query),
-        },
-        orderBy: [{ index: 'asc' }],
-      });
+      if (!query) {
+        const media: Media[] = await prisma.media.findMany({
+          orderBy: [{ index: 'asc' }],
+        });
+        return NextResponse.json(media);
+      }
+      else {
+        const media: Media[] = await prisma.media.findMany({
+          where: {
+            categoryId: Number(query),
+          },
+          orderBy: [{ index: 'asc' }],
+        });
       return NextResponse.json(media);
+      }
     }
   } catch (err) {
     console.log(err);

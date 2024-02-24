@@ -14,17 +14,14 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types';
 import { Category, Link, Media } from '@prisma/client';
 import { useState } from 'react';
+import { useQueries, useQuery } from '@tanstack/react-query';
+import Header from './Header';
 
 import 'swiper/css';
 import './swiper.css';
 import 'swiper/css/hash-navigation';
-import Header from './Header';
-
-type SwiperPageProps = {
-  categories: Category[];
-  media: Media[];
-  links: Link[];
-};
+import axios from 'axios';
+import Loading from './Loading';
 
 const veticalSwiperParams: SwiperOptions = {
   modules: [Mousewheel, Keyboard, HashNavigation],
@@ -62,8 +59,53 @@ const horizontalSwiperParams: SwiperOptions = {
   },
 };
 
-export default function ImageSlider(props: SwiperPageProps) {
+export default function ImageSlider() {
   const [currentCategory, setCurrentCategory] = useState(0);
+
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ['media'],
+        queryFn: () => axios.get('api/media').then((res) => res.data),
+        retry: 5,
+      },
+      {
+        queryKey: ['categories'],
+        queryFn: () => axios.get('api/categories').then((res) => res.data),
+        retry: 5,
+      },
+      {
+        queryKey: ['links'],
+        queryFn: () => axios.get('api/links').then((res) => res.data),
+        retry: 5,
+      },
+    ],
+    combine: (results) => {
+      return {
+        data: results.map((result) => result.data),
+        pending: results.some((result) => result.isPending),
+        error: results.some((result) => result.isError),
+      };
+    },
+  });
+
+  if (results.pending) return <Loading />;
+
+  if (results.error) {
+    return (
+      <div className="flex flex-col space-y-4 justify-center items-center h-screen">
+        <h1 className="text-3xl text-red-600">Йойки! </h1>
+        <p className="text-xl">Щось пішло не так</p>
+      </div>
+    );
+  }
+  
+  const [media, categories, links] = results.data as [
+    Media[],
+    Category[],
+    Link[],
+  ];
+
 
   function handleCategoryChange({ realIndex }: { realIndex: number }) {
     setCurrentCategory(realIndex);
@@ -71,11 +113,11 @@ export default function ImageSlider(props: SwiperPageProps) {
 
   return (
     <Swiper {...veticalSwiperParams} onSlideChange={handleCategoryChange}>
-      {props.categories?.map((category, index) => (
+      {categories?.map((category, index) => (
         <SwiperSlide key={index} data-hash={encodeURIComponent(category.title)}>
           <Swiper {...horizontalSwiperParams}>
-            {props.media &&
-              props.media
+            {media &&
+              media
                 .filter((media) => media.categoryId === category.id)
                 .map((media, index) => (
                   <SwiperSlide key={index}>
@@ -121,11 +163,11 @@ export default function ImageSlider(props: SwiperPageProps) {
         </SwiperSlide>
       ))}
       <SwiperSlide key="links" data-hash="links">
-        <LinksPage links={props.links} />
+        <LinksPage links={links} />
       </SwiperSlide>
       <Header
         className="flex flex-col items-center absolute top-0 left-[50%] z-[1]"
-        categories={props.categories}
+        categories={categories}
         currentCategory={currentCategory}
       />
     </Swiper>

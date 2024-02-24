@@ -45,7 +45,12 @@ export async function PUT(request: Request, response: Response) {
       orderBy: [{ index: 'desc' }],
     });
 
-    const savedCategory = await prisma.category.create({ data: {...category, index: last_category? last_category?.index + 1: 0} });
+    const savedCategory = await prisma.category.create({
+      data: {
+        ...category,
+        index: last_category ? last_category?.index + 1 : 0,
+      },
+    });
 
     return NextResponse.json(savedCategory);
   } catch (err) {
@@ -87,21 +92,20 @@ export async function DELETE(request: Request) {
         id: category_id._id,
       },
     });
-    
+
     const categories = await prisma.category.findMany({
-  orderBy: [{ index: 'asc' }],
-});
+      orderBy: [{ index: 'asc' }],
+    });
 
-await prisma.$transaction(
-  categories.map((category, index) =>
-    prisma.category.update({
-      where: { id: category.id },
-      data: { index: index},
-    }),
-  ),
-);
+    await prisma.$transaction(
+      categories.map((category, index) =>
+        prisma.category.update({
+          where: { id: category.id },
+          data: { index: index },
+        }),
+      ),
+    );
 
-    
     return NextResponse.json(deleted_category);
   } catch (err) {
     return NextResponse.json(err, { status: 500 });
