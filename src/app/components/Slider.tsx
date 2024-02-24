@@ -68,16 +68,19 @@ export default function ImageSlider() {
         queryKey: ['media'],
         queryFn: () => axios.get('api/media').then((res) => res.data),
         retry: 5,
+        staleTime: Infinity,
       },
       {
         queryKey: ['categories'],
         queryFn: () => axios.get('api/categories').then((res) => res.data),
         retry: 5,
+        staleTime: Infinity,
       },
       {
         queryKey: ['links'],
         queryFn: () => axios.get('api/links').then((res) => res.data),
         retry: 5,
+        staleTime: Infinity,
       },
     ],
     combine: (results) => {
@@ -128,6 +131,7 @@ export default function ImageSlider() {
                         loading="lazy"
                         alt={'photo slide ' + index}
                         className="object-cover pointer-events-none"
+                        sizes='(max-width: 850px) 100vw, 50vw'
                       />
                     ) : (
                       <video
