@@ -14,7 +14,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types';
 import { Category, Link, Media } from '@prisma/client';
 import { useState } from 'react';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import Header from './Header';
 
 import 'swiper/css';
@@ -23,44 +23,44 @@ import 'swiper/css/hash-navigation';
 import axios from 'axios';
 import Loading from './Loading';
 
-const veticalSwiperParams: SwiperOptions = {
-  modules: [Mousewheel, Keyboard, HashNavigation],
-  keyboard: true,
-  mousewheel: true,
-  direction: 'vertical',
-  speed: 1000,
-  longSwipesRatio: 0.1,
-  edgeSwipeThreshold: 40,
-  lazyPreloadPrevNext: 2,
-  resistanceRatio: 0,
-  hashNavigation: {
-    watchState: true,
-    replaceState: false,
-  },
-};
-
-const horizontalSwiperParams: SwiperOptions = {
-  modules: [Keyboard, Navigation],
-  navigation: {
-    nextEl: '#swiper-button-next',
-    prevEl: '#swiper-button-prev',
-  },
-  loop: true,
-  keyboard: true,
-  longSwipesRatio: 0.1,
-  spaceBetween: 0,
-  direction: 'horizontal',
-  speed: 1000,
-  lazyPreloadPrevNext: 2,
-  breakpoints: {
-    850: {
-      slidesPerView: 2,
-    },
-  },
-};
-
 export default function ImageSlider() {
   const [currentCategory, setCurrentCategory] = useState(0);
+
+  const veticalSwiperParams: SwiperOptions = {
+    modules: [Mousewheel, Keyboard, HashNavigation],
+    keyboard: true,
+    mousewheel: true,
+    direction: 'vertical',
+    speed: 1000,
+    longSwipesRatio: 0.1,
+    edgeSwipeThreshold: 40,
+    lazyPreloadPrevNext: 2,
+    resistanceRatio: 0,
+    hashNavigation: {
+      watchState: true,
+      replaceState: false,
+    },
+  };
+  
+  const horizontalSwiperParams: SwiperOptions = {
+    modules: [Keyboard, Navigation],
+    navigation: {
+      nextEl: '#swiper-button-next',
+      prevEl: '#swiper-button-prev',
+    },
+    loop: true,
+    keyboard: true,
+    longSwipesRatio: 0.1,
+    spaceBetween: 0,
+    direction: 'horizontal',
+    speed: 1000,
+    lazyPreloadPrevNext: 2,
+    breakpoints: {
+      850: {
+        slidesPerView: 2,
+      },
+    },
+  };
 
   const results = useQueries({
     queries: [
@@ -131,6 +131,7 @@ export default function ImageSlider() {
                         alt={'photo slide ' + index}
                         className="object-cover pointer-events-none"
                         sizes="(max-width: 850px) 100vw, 50vw"
+                        quality={100}
                       />
                     ) : (
                       <video
