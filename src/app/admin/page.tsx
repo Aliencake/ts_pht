@@ -36,17 +36,17 @@ export default function Page() {
             <TabsList>
               <TabsTrigger value="categories">Категорії та медіа</TabsTrigger>
               <TabsTrigger value="links">Посилання</TabsTrigger>
-              <TabsTrigger value="activity">Активність</TabsTrigger>
+              <TabsTrigger value="settings">Налаштування</TabsTrigger>
             </TabsList>
           </div>
-          <div className="overflow-auto">
+          <div className="overflow-auto ">
             <TabsContent value="categories">
               <CategoriesBoard />
             </TabsContent>
             <TabsContent value="links">
               <LinksBoard queryClient={queryClient} />
             </TabsContent>
-            <TabsContent value="activity">
+            <TabsContent value="settings" className=''>
               <Settings />
             </TabsContent>
           </div>

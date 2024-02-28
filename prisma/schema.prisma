@@ -38,8 +38,7 @@ model Media {
 
 model Settings {
   id Int @id @default(autoincrement())
-  autoPlay Boolean @default(false)
-  autoPlayDelay Int @default(5)
+  autoPlayDelay Int @default(0)
 }
 
 enum Type {

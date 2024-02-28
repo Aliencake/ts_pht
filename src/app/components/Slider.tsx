@@ -41,7 +41,7 @@ export default function ImageSlider() {
       replaceState: false,
     },
   };
-  
+
   const horizontalSwiperParams: SwiperOptions = {
     modules: [Keyboard, Navigation],
     navigation: {

@@ -37,6 +37,7 @@ import {
 } from '@dnd-kit/modifiers';
 import { AddCategoryDialog } from './AddCategoryDialog';
 import { useQueryClient } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 
 const SortableCategory = dynamic(() => import('./SortableCategory'), {
   ssr: false,
@@ -112,7 +113,13 @@ export default function CategoriesBoard() {
     retry: 10,
   });
 
-  if (isLoading) return <Skeleton className="w-[300px] h-[200px]" />;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-32">
+        <Loader2 className="ml-2 size-5 animate-spin" />
+      </div>
+    )
+  }
 
   if (error) {
     console.log(error);

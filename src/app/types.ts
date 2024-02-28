@@ -33,3 +33,7 @@ export const add_media_schema = z.object({
   type: z.enum(['PHOTO', 'VIDEO']),
   size: z.number(),
 });
+
+export const update_settings_schema = z.object({
+  delay: z.coerce.number().nonnegative().max(2147483645),
+});

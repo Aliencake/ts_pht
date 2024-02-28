@@ -131,11 +131,10 @@ export default function Login() {
             )}
           />
           <Button className=" w-60" type="submit" disabled={loading}>
-            Увійти
             {loading ? (
               <Loader2 className="ml-2 h-4 w-4 animate-spin" />
             ) : (
-              <></>
+              <>Увійти</>
             )}
           </Button>
         </form>

@@ -36,6 +36,7 @@ import {
   restrictToParentElement,
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers';
+import { Loader2 } from 'lucide-react';
 
 const SortableLink = dynamic(() => import('./SortableLink'), {
   ssr: false,
@@ -111,7 +112,13 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
     retry: 10,
   });
 
-  if (isLoading) return <Skeleton className="w-[300px] h-[200px]" />;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-32">
+        <Loader2 className="ml-2 size-5 animate-spin" />
+      </div>
+    )
+  }
 
   if (error) {
     console.log(error);

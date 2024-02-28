@@ -83,7 +83,7 @@ export function AddLinksDialog({ mutation }: AddLinksDialogProps) {
                       <FormLabel>Назва</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Телега"
+                          placeholder="Телеграм"
                           className="col-span-3 w-max"
                           {...field}
                         />
