@@ -1,17 +1,20 @@
 import { Link } from '@prisma/client';
+import { isEmail } from '../types';
 
 type LinksPageProps = {
   links: Link[] | null;
 };
 
 export default function LinksPage(props: LinksPageProps) {
+  console.log();
+
   return (
     <div className="flex flex-col items-center w-full h-full relative">
       <div className="flex flex-row gap-2 h-dvh uppercase place-content-center items-center">
         {props.links?.map((link, index) => (
           <a
             key={index}
-            href={link.href}
+            href={isEmail(link.href) ? 'mailto:' + link.href : link.href}
             target="_blank"
             className="text-lg"
           >
