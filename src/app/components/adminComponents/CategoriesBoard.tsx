@@ -3,6 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { useState } from 'react';
 import { Category } from '@prisma/client';
+import { toast } from 'sonner';
 import {
   add_category_schema,
   id_schema,
@@ -71,6 +72,12 @@ export default function CategoriesBoard() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
+      toast.success('Категорію успішно створено');
+    },
+    onError: (error) => {
+      toast.error('Виникла помилка', {
+        description: error.message,
+      });
     },
   });
 
@@ -90,6 +97,12 @@ export default function CategoriesBoard() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
+      toast.success('Категорію видалено');
+    },
+    onError: (error) => {
+      toast.error('Виникла помилка', {
+        description: error.message,
+      });
     },
   });
 

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { toast } from 'sonner';
 import {
   Form,
   FormControl,
@@ -41,6 +42,12 @@ export default function Settings() {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['settings'],
+      });
+      toast.success('Дані оновлено');
+    },
+    onError: (error) => {
+      toast.error('Дані не успішно не оновлено', {
+        description: error.message,
       });
     },
   });

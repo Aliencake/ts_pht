@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Provider from '../components/Provider';
 import { EdgeStoreProvider } from '../../lib/edgestore';
+import { Toaster } from '../components/ui/sonner';
 
 export const metadata: Metadata = {
   title: 'Admin page',
@@ -17,6 +18,7 @@ export default function AdminLayout({
     <section className="h-screen w-screen">
       <Provider>
         <EdgeStoreProvider>{children}</EdgeStoreProvider>
+        <Toaster position="bottom-center" richColors />
       </Provider>
     </section>
   );

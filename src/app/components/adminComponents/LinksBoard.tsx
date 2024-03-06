@@ -16,6 +16,8 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table';
+import { toast } from 'sonner';
+
 import { Skeleton } from '../ui/skeleton';
 import { AddLinksDialog } from './AddLinksDialog';
 import {
@@ -70,6 +72,12 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['links'] });
+      toast.success('Посилання додано');
+    },
+    onError: (error) => {
+      toast.error('Виникла помилка', {
+        description: error.message,
+      });
     },
   });
 
@@ -89,6 +97,15 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['links'] });
+      toast.success('Посилання видалено');
+    },
+    onError: (error, variables, context) => {
+      if (context?.previousLinks) {
+        queryClient.setQueryData(['links'], context.previousLinks);
+      }
+      toast.error('Виникла помилка', {
+        description: error.message,
+      });
     },
   });
 
