@@ -19,14 +19,13 @@ export async function POST(request: Request, response: Response) {
     const settings: Prisma.SettingsCreateInput = {
       autoPlayDelay: parsedSettings.delay,
     };
-    if(fetched_settings) {
+    if (fetched_settings) {
       const savedSettings = await prisma.settings.update({
         where: { id: fetched_settings?.id },
         data: settings,
       });
       return NextResponse.json(savedSettings);
-    }
-    else {
+    } else {
       const savedSettings = await prisma.settings.create({
         data: settings,
       });

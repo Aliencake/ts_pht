@@ -21,7 +21,6 @@ import { useEffect, useState } from 'react';
 export default function Settings() {
   const queryClient = useQueryClient();
 
-
   const { data, error, isLoading } = useQuery({
     queryKey: ['settings'],
     queryFn: async () => {
@@ -47,31 +46,30 @@ export default function Settings() {
   });
 
   const form = useForm<z.infer<typeof update_settings_schema>>({
-    resolver: zodResolver(update_settings_schema)
+    resolver: zodResolver(update_settings_schema),
   });
 
   useEffect(() => {
     if (data?.autoPlayDelay) {
       form.setValue('delay', data.autoPlayDelay);
-    }
-    else {
+    } else {
       form.setValue('delay', 0);
     }
-  }, [data])
+  }, [data]);
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-32">
         <Loader2 className="ml-2 size-5 animate-spin" />
       </div>
-    )
+    );
   }
 
   if (error) {
     console.log(error);
     return <div>Йойки помилка</div>;
   }
-  
+
   function onSubmit(values: z.infer<typeof update_settings_schema>) {
     UpdateSettingsMutation.mutate(values);
   }
@@ -95,23 +93,17 @@ export default function Settings() {
                     className="col-span-3 w-max"
                     {...field}
                   />
-
                 </FormControl>
 
                 <FormDescription>
-                  Час в мілісекундах, для автоматичного перегортання 
-                  <br />
-                  (1000 мілісекунд = 1 секунда)
-                  <br />
-                  0 - вимкнути автоматичне перегортання
-              </FormDescription>
+                  Час в секундах, для автоматичного перегортання
+                  <br />0 - вимкнути автоматичне перегортання
+                </FormDescription>
                 <FormMessage />
               </FormItem>
-              
             )}
           />
           <Button type="submit">Зберегти</Button>
-
         </form>
       </Form>
     </div>

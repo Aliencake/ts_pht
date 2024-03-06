@@ -117,7 +117,7 @@ export default function LinksBoard({ queryClient }: LinksBoardProps) {
       <div className="flex justify-center items-center h-32">
         <Loader2 className="ml-2 size-5 animate-spin" />
       </div>
-    )
+    );
   }
 
   if (error) {

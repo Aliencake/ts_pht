@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Settings" ALTER COLUMN "autoPlayDelay" SET DEFAULT 0,
+ALTER COLUMN "autoPlayDelay" SET DATA TYPE DOUBLE PRECISION;

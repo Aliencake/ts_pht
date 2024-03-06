@@ -2,10 +2,10 @@ import { Aperture } from 'lucide-react';
 
 export default function Loading() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between mt-[200px]">
+    <main className="flex min-h-dvh flex-grow flex-col place-content-center items-center">
       <Aperture
-        className="animate-[spin_1s_linear_infinite]"
-        size={70}
+        className="animate-[spin_0.9s_linear_infinite]"
+        size={100}
         color="#7F0000"
         strokeWidth={0.75}
       />

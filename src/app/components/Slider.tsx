@@ -9,10 +9,11 @@ import {
   Mousewheel,
   Navigation,
   HashNavigation,
+  Autoplay,
 } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types';
-import { Category, Link, Media } from '@prisma/client';
+import { Category, Link, Media, Settings } from '@prisma/client';
 import { useState } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import Header from './Header';
@@ -43,7 +44,7 @@ export default function ImageSlider() {
   };
 
   const horizontalSwiperParams: SwiperOptions = {
-    modules: [Keyboard, Navigation],
+    modules: [Keyboard, Navigation, Autoplay],
     navigation: {
       nextEl: '#swiper-button-next',
       prevEl: '#swiper-button-prev',
@@ -82,6 +83,13 @@ export default function ImageSlider() {
         retry: 5,
         staleTime: Infinity,
       },
+      {
+        queryKey: ['autoplay'],
+        queryFn: () =>
+          axios.get('api/settings/autoplay').then((res) => res.data),
+        retry: 5,
+        staleTime: Infinity,
+      },
     ],
     combine: (results) => {
       return {
@@ -103,10 +111,11 @@ export default function ImageSlider() {
     );
   }
 
-  const [media, categories, links] = results.data as [
+  const [media, categories, links, settings] = results.data as [
     Media[],
     Category[],
     Link[],
+    Settings,
   ];
 
   function handleCategoryChange({ realIndex }: { realIndex: number }) {

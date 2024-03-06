@@ -46,7 +46,7 @@ export default function Page() {
             <TabsContent value="links">
               <LinksBoard queryClient={queryClient} />
             </TabsContent>
-            <TabsContent value="settings" className=''>
+            <TabsContent value="settings" className="">
               <Settings />
             </TabsContent>
           </div>
