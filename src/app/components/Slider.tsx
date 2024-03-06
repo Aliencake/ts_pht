@@ -179,7 +179,7 @@ export default function ImageSlider() {
         <LinksPage links={links} />
       </SwiperSlide>
       <Header
-        className="flex flex-col items-center absolute top-0 left-[50%] z-[1]"
+        className="flex flex-col items-center absolute top-0 z-10 mt-4 ml-10"
         categories={categories}
         currentCategory={currentCategory}
       />

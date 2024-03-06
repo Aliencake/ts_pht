@@ -62,7 +62,7 @@ export default function Settings() {
     } else {
       form.setValue('delay', 0);
     }
-  }, [data]);
+  }, [form, data]);
 
   if (isLoading) {
     return (

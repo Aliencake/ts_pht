@@ -1,7 +1,6 @@
 import { Category } from '@prisma/client';
 import LogoSvg from './Logo';
-import { AlignJustify } from 'lucide-react';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card';
+import { S } from '@upstash/redis/zmscore-b6b93f14';
 
 type HeaderProps = {
   categories: Category[];
@@ -10,24 +9,32 @@ type HeaderProps = {
 };
 
 export default function Header(props: HeaderProps) {
+  const isLastCategory = props.currentCategory === props.categories.length;
+
   return (
     <div className={props.className}>
       <a href="/">
-        <LogoSvg width={100} className=" fill-red-900 mb-0 opacity-70" />
+        <LogoSvg
+          style={{ fill: isLastCategory ? '#7f1d1d' : '#FFFFFF' }}
+          width={300}
+          className=" mb-4"
+        />
       </a>
       <div className="flex flex-row gap-2">
-        <div key="current_category">
+        <div
+          key="current_category"
+          className=" text-white"
+          style={{
+            color: isLastCategory ? '#7f1d1d' : '#FFFFFF',
+            fontSize: '1.125rem',
+          }}
+        >
           {props.categories.map((category) =>
             category.index === props.currentCategory ? category.title : '',
           )}
-          {props.currentCategory === props.categories.length ? 'Посилання' : ''}
+          {isLastCategory ? 'Посилання' : ''}
         </div>
-        <HoverCard openDelay={400}>
-          <HoverCardTrigger>
-            <AlignJustify size={24} />
-          </HoverCardTrigger>
-          <HoverCardContent className="flex flex-col w-auto max-h-32 overflow-auto">
-            {props.categories
+        {/* {props.categories
               .filter((category) => category.index !== props.currentCategory)
               .map((category) => (
                 <a
@@ -43,9 +50,7 @@ export default function Header(props: HeaderProps) {
               <a key="links" href={'/#links'}>
                 Посилання
               </a>
-            )}
-          </HoverCardContent>
-        </HoverCard>
+            )} */}
       </div>
     </div>
   );
