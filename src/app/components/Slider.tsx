@@ -30,7 +30,9 @@ export default function ImageSlider() {
   const veticalSwiperParams: SwiperOptions = {
     modules: [Mousewheel, Keyboard, HashNavigation],
     keyboard: true,
-    mousewheel: true,
+    mousewheel: {
+      noMousewheelClass: 'swiper-no-mousewheel',
+    },
     direction: 'vertical',
     speed: 1000,
     longSwipesRatio: 0.1,
@@ -179,7 +181,7 @@ export default function ImageSlider() {
         <LinksPage links={links} />
       </SwiperSlide>
       <Header
-        className="flex flex-col items-center absolute top-0 z-10 w-screen mt-4 sm:ml-10 sm:w-max"
+        className="flex flex-col swiper-no-mousewheel items-center absolute top-0 z-10 w-screen mt-4 sm:ml-10 sm:w-max"
         categories={categories}
         currentCategory={currentCategory}
       />

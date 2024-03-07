@@ -36,7 +36,7 @@ export default function Page() {
             <TabsList>
               <TabsTrigger value="categories">Категорії та медіа</TabsTrigger>
               <TabsTrigger value="links">Посилання</TabsTrigger>
-              <TabsTrigger value="settings">Налаштування</TabsTrigger>
+              {/* <TabsTrigger value="settings">Налаштування</TabsTrigger> */}
             </TabsList>
           </div>
           <div className="overflow-auto ">
@@ -46,7 +46,7 @@ export default function Page() {
             <TabsContent value="links">
               <LinksBoard queryClient={queryClient} />
             </TabsContent>
-            <TabsContent value="settings" className="">
+            <TabsContent value="settings">
               <Settings />
             </TabsContent>
           </div>
