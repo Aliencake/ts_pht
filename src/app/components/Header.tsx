@@ -1,6 +1,5 @@
 import { Category } from '@prisma/client';
 import LogoSvg from './Logo';
-import { S } from '@upstash/redis/zmscore-b6b93f14';
 
 type HeaderProps = {
   categories: Category[];
@@ -13,20 +12,21 @@ export default function Header(props: HeaderProps) {
 
   return (
     <div className={props.className}>
-      <a href="/">
+      <a href="/" className=" mb-4 sm:w-max w-40">
         <LogoSvg
-          style={{ fill: isLastCategory ? '#7f1d1d' : '#FFFFFF' }}
-          width={300}
-          className=" mb-4"
+          style={{
+            fill: isLastCategory ? '#7f1d1d' : '#FFFFFF',
+            width: '100%',
+          }}
         />
       </a>
       <div className="flex flex-row gap-2">
         <div
           key="current_category"
-          className=" text-white"
           style={{
             color: isLastCategory ? '#7f1d1d' : '#FFFFFF',
             fontSize: '1.125rem',
+            textTransform: 'uppercase',
           }}
         >
           {props.categories.map((category) =>
