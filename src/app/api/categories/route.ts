@@ -7,6 +7,7 @@ import {
   add_category_schema,
   id_schema,
   update_array_index_schema,
+  update_category_schema,
 } from '@/app/types';
 import { edgeStoreClient } from '../edgestore/[...edgestore]/edgestore';
 
@@ -14,19 +15,10 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
       const categories: Category[] = await prisma.category.findMany({
         orderBy: [{ index: 'asc' }],
       });
       return NextResponse.json(categories);
-    } else {
-      const categories: Category[] = await prisma.category.findMany({
-        orderBy: [{ index: 'asc' }],
-      });
-      return NextResponse.json(categories);
-    }
   } catch (err) {
     return NextResponse.json(err, { status: 500 });
   }
@@ -118,20 +110,43 @@ export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session) {
-      return NextResponse.json('You must be log in!', { status: 401 });
-    }
+    // if (!session) {
+    //   return NextResponse.json('You must be log in!', { status: 401 });
+    // }
     const res = await request.json();
-    const categories = update_array_index_schema.parse(res['data']);
-    const results = await prisma.$transaction(
-      categories.map((category) =>
-        prisma.category.update({
-          where: { id: category._id },
-          data: { index: category.index },
-        }),
-      ),
-    );
-    return NextResponse.json(results);
+
+    const categories = update_array_index_schema.safeParse(res.data);
+
+    const updated_category =  update_category_schema.safeParse(res.data);
+
+    if (categories.success) {
+      const results = await prisma.$transaction(
+        categories.data.map((category) =>
+          prisma.category.update({
+            where: { id: category._id },
+            data: { index: category.index },
+          }),
+        ),
+      );
+
+      return NextResponse.json(results);
+    }
+    else if (updated_category.success) {
+      const result = await prisma.category.update({
+        where: { id: updated_category.data.id },
+        data: {
+          title: updated_category.data.title,
+          folderId: updated_category.data.folder_id,
+        },
+      });
+      
+      return NextResponse.json(result);
+    }
+    else {
+      console.log('Invalid data');
+      return NextResponse.json('Invalid data', { status: 400 });
+    }
+
   } catch (err) {
     return NextResponse.json({ err }, { status: 500 });
   }

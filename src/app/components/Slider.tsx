@@ -37,7 +37,7 @@ export default function ImageSlider() {
     speed: 1000,
     longSwipesRatio: 0.1,
     edgeSwipeThreshold: 40,
-    lazyPreloadPrevNext: 2,
+    // lazyPreloadPrevNext: 2,
     resistanceRatio: 0,
     hashNavigation: {
       watchState: true,
@@ -136,10 +136,9 @@ export default function ImageSlider() {
                   <SwiperSlide key={index}>
                     {media.type === 'PHOTO' ? (
                       <Image
-                        src={media.href}
+                        src={media.href}  
                         fill
-                        loading="lazy"
-                        alt={'photo slide ' + index}
+                        alt={'photo slide ' + category.title + index}
                         className="object-cover pointer-events-none"
                         sizes="(max-width: 850px) 100vw, 50vw"
                         quality={100}
