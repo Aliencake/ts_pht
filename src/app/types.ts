@@ -48,9 +48,8 @@ export function isEmail(input: string): boolean {
   return success;
 }
 
-
-export const update_category_schema = z.object({ 
+export const update_category_schema = z.object({
   id: z.number(),
   title: z.string().min(1).optional(),
   folder_id: z.number().optional(),
- });
+});

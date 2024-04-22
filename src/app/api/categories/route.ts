@@ -15,10 +15,10 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
   try {
-      const categories: Category[] = await prisma.category.findMany({
-        orderBy: [{ index: 'asc' }],
-      });
-      return NextResponse.json(categories);
+    const categories: Category[] = await prisma.category.findMany({
+      orderBy: [{ index: 'asc' }],
+    });
+    return NextResponse.json(categories);
   } catch (err) {
     return NextResponse.json(err, { status: 500 });
   }
@@ -117,7 +117,7 @@ export async function POST(request: Request) {
 
     const categories = update_array_index_schema.safeParse(res.data);
 
-    const updated_category =  update_category_schema.safeParse(res.data);
+    const updated_category = update_category_schema.safeParse(res.data);
 
     if (categories.success) {
       const results = await prisma.$transaction(
@@ -130,8 +130,7 @@ export async function POST(request: Request) {
       );
 
       return NextResponse.json(results);
-    }
-    else if (updated_category.success) {
+    } else if (updated_category.success) {
       const result = await prisma.category.update({
         where: { id: updated_category.data.id },
         data: {
@@ -139,14 +138,12 @@ export async function POST(request: Request) {
           folderId: updated_category.data.folder_id,
         },
       });
-      
+
       return NextResponse.json(result);
-    }
-    else {
+    } else {
       console.log('Invalid data');
       return NextResponse.json('Invalid data', { status: 400 });
     }
-
   } catch (err) {
     return NextResponse.json({ err }, { status: 500 });
   }
