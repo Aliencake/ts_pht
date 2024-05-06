@@ -1,8 +1,16 @@
-import { Category } from '@prisma/client';
+import { Category, Folder } from '@prisma/client';
 import LogoSvg from './Logo';
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
+} from '../components/ui/menubar';
 
 type HeaderProps = {
   categories: Category[];
+  folders: Folder[];
   currentCategory: number;
   className?: string;
 };
@@ -20,37 +28,50 @@ export default function Header(props: HeaderProps) {
           }}
         />
       </a>
-      <div className="flex flex-row gap-2">
-        <div
-          key="current_category"
-          style={{
-            color: isLastCategory ? '#7f1d1d' : '#FFFFFF',
-            fontSize: '1.125rem',
-            textTransform: 'uppercase',
-          }}
-        >
-          {props.categories.map((category) =>
-            category.index === props.currentCategory ? category.title : '',
-          )}
-          {isLastCategory ? 'Посилання' : ''}
-        </div>
-        {/* {props.categories
-              .filter((category) => category.index !== props.currentCategory)
-              .map((category) => (
-                <a
-                  key={category.index}
-                  href={'/#' + encodeURIComponent(category.title)}
-                >
-                  {category.title}
-                </a>
+      <div
+        style={{
+          color: isLastCategory ? '#7f1d1d' : '#FFFFFF',
+        }}
+      >
+        <div>
+          <Menubar>
+            {props.folders
+              .filter((folder) => folder.categories.length)
+              .map((folder: Folder) => (
+                <MenubarMenu key={folder.id}>
+                  <MenubarTrigger className="uppercase text-lg">
+                    {folder.title}
+                  </MenubarTrigger>
+                  <MenubarContent
+                    style={{
+                      color: isLastCategory ? '#7f1d1d' : '#FFFFFF',
+                    }}
+                  >
+                    {props.categories
+                      .filter((category) =>
+                        folder.categories.includes(category.id),
+                      )
+                      .map((category) => (
+                        <MenubarItem key={category.id}>
+                          <a
+                            className="uppercase flex flex-row gap-0"
+                            style={{
+                              textDecoration:
+                                props.currentCategory === category.index
+                                  ? 'underline'
+                                  : undefined,
+                            }}
+                            href={'/#' + encodeURIComponent(category.title)}
+                          >
+                            {category.title}
+                          </a>
+                        </MenubarItem>
+                      ))}
+                  </MenubarContent>
+                </MenubarMenu>
               ))}
-            {props.currentCategory === props.categories.length ? (
-              ''
-            ) : (
-              <a key="links" href={'/#links'}>
-                Посилання
-              </a>
-            )} */}
+          </Menubar>
+        </div>
       </div>
     </div>
   );

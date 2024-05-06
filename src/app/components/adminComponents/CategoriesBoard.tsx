@@ -186,12 +186,13 @@ export default function CategoriesBoard() {
             items={categories}
             strategy={verticalListSortingStrategy}
           >
-            <Table>
+            <Table className="mb-4">
               <TableHeader>
                 <TableRow>
                   <TableHead>Індекс</TableHead>
                   <TableHead>Назва</TableHead>
                   <TableHead>Медіа</TableHead>
+                  <TableHead>Тека</TableHead>
                   <TableHead>Видалити</TableHead>
                 </TableRow>
               </TableHeader>
@@ -212,7 +213,7 @@ export default function CategoriesBoard() {
           <Skeleton className="w-[300px] h-[200px]" />
         )}
       </DndContext>
-      <AddCategoryDialog mutation={AddCategoriesMutation} />
+      <AddCategoryDialog mutation={AddCategoriesMutation} name="категорію" />
     </div>
   );
 }

@@ -31,9 +31,10 @@ type AddCategoryDialogProps = {
     z.infer<typeof add_category_schema>,
     unknown
   >;
+  name: string;
 };
 
-export function AddCategoryDialog({ mutation }: AddCategoryDialogProps) {
+export function AddCategoryDialog({ mutation, name }: AddCategoryDialogProps) {
   const form = useForm<z.infer<typeof add_category_schema>>({
     resolver: zodResolver(add_category_schema),
     defaultValues: {
@@ -51,17 +52,13 @@ export function AddCategoryDialog({ mutation }: AddCategoryDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          className="mt-4"
-          disabled={mutation.isPending}
-          variant="outline"
-        >
+        <Button disabled={mutation.isPending} variant="outline">
           {mutation.isPending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Додаємо
             </>
           ) : (
-            <>Додати нову категорію</>
+            <>Додати нову {name}</>
           )}
         </Button>
       </DialogTrigger>
@@ -69,7 +66,7 @@ export function AddCategoryDialog({ mutation }: AddCategoryDialogProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>Додати нову категорію</DialogTitle>
+              <DialogTitle>Додати нову {name}</DialogTitle>
             </DialogHeader>
 
             <div className="grid gap-4 py-4">
@@ -81,11 +78,7 @@ export function AddCategoryDialog({ mutation }: AddCategoryDialogProps) {
                     <FormItem>
                       <FormLabel>Назва</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Назва категорії"
-                          className="col-span-3 w-max"
-                          {...field}
-                        />
+                        <Input className="col-span-3 w-max" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -50,6 +50,10 @@ export function isEmail(input: string): boolean {
 
 export const update_category_schema = z.object({
   id: z.number(),
-  title: z.string().min(1).optional(),
-  folder_id: z.number().optional(),
+  title: z.string().min(1),
+});
+
+export const update_folder_schema = z.object({
+  id: z.number(),
+  categories: z.array(z.number()),
 });

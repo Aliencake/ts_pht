@@ -13,7 +13,7 @@ import {
 } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SwiperOptions } from 'swiper/types';
-import { Category, Link, Media, Settings } from '@prisma/client';
+import { Category, Folder, Link, Media, Settings } from '@prisma/client';
 import { useState } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import Header from './Header';
@@ -90,6 +90,12 @@ export default function ImageSlider() {
         retry: 5,
         staleTime: Infinity,
       },
+      {
+        queryKey: ['folders'],
+        queryFn: () => axios.get('api/folders').then((res) => res.data),
+        retry: 5,
+        staleTime: Infinity,
+      },
     ],
     combine: (results) => {
       return {
@@ -111,11 +117,12 @@ export default function ImageSlider() {
     );
   }
 
-  const [media, categories, links, settings] = results.data as [
+  const [media, categories, links, settings, folders] = results.data as [
     Media[],
     Category[],
     Link[],
     Settings,
+    Folder[],
   ];
 
   function handleCategoryChange({ realIndex }: { realIndex: number }) {
@@ -136,7 +143,7 @@ export default function ImageSlider() {
                       <Image
                         src={media.href}
                         fill
-                        loading='lazy'
+                        loading="lazy"
                         alt={'photo slide ' + category.title + index}
                         className="object-cover pointer-events-none"
                         sizes="(min-width: 850px) 100vw, 65vw"
@@ -182,6 +189,7 @@ export default function ImageSlider() {
         className="flex flex-col swiper-no-mousewheel items-center absolute top-0 z-10 w-screen mt-4 sm:ml-10 sm:w-max"
         categories={categories}
         currentCategory={currentCategory}
+        folders={folders}
       />
     </Swiper>
   );

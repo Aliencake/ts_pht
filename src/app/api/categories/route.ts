@@ -7,7 +7,6 @@ import {
   add_category_schema,
   id_schema,
   update_array_index_schema,
-  update_category_schema,
 } from '@/app/types';
 import { edgeStoreClient } from '../edgestore/[...edgestore]/edgestore';
 
@@ -117,8 +116,6 @@ export async function POST(request: Request) {
 
     const categories = update_array_index_schema.safeParse(res.data);
 
-    const updated_category = update_category_schema.safeParse(res.data);
-
     if (categories.success) {
       const results = await prisma.$transaction(
         categories.data.map((category) =>
@@ -130,16 +127,6 @@ export async function POST(request: Request) {
       );
 
       return NextResponse.json(results);
-    } else if (updated_category.success) {
-      const result = await prisma.category.update({
-        where: { id: updated_category.data.id },
-        data: {
-          title: updated_category.data.title,
-          folderId: updated_category.data.folder_id,
-        },
-      });
-
-      return NextResponse.json(result);
     } else {
       console.log('Invalid data');
       return NextResponse.json('Invalid data', { status: 400 });

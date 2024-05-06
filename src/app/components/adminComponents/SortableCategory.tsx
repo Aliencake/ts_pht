@@ -7,6 +7,7 @@ import { X } from 'lucide-react';
 import { z } from 'zod';
 import { TableCell, TableRow } from '../ui/table';
 import { MediaBoardDialog } from './MediaBoard';
+import { FolderCombobox } from './ChoseFolderCombobox';
 
 type SortableCategoryProps = {
   item: Category;
@@ -42,6 +43,9 @@ export default function SortableCategory(props: SortableCategoryProps) {
         <div className="flex justify-center">
           <MediaBoardDialog category={props.item} />
         </div>
+      </TableCell>
+      <TableCell>
+        <FolderCombobox category_id={props.item.id} />
       </TableCell>
       <TableCell>
         <div className="flex justify-center">

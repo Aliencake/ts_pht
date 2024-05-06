@@ -23,7 +23,6 @@ model Category {
   title String
   media Media[]
   index Int @default(autoincrement())
-  folderId Int @default(-1)
 }
 
 model Folder {
