@@ -46,15 +46,16 @@ export default function Header(props: HeaderProps) {
                     style={{
                       color: isLastCategory ? '#7f1d1d' : '#FFFFFF',
                     }}
+                    className="grid grid-cols-2 gap-2"
                   >
                     {props.categories
                       .filter((category) =>
                         folder.categories.includes(category.id),
                       )
                       .map((category) => (
-                        <MenubarItem key={category.id}>
+                        <MenubarItem key={category.id} className="">
                           <a
-                            className="uppercase flex flex-row gap-0"
+                            className="uppercase"
                             style={{
                               textDecoration:
                                 props.currentCategory === category.index

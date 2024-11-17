@@ -23,6 +23,7 @@ import './swiper.css';
 import 'swiper/css/hash-navigation';
 import axios from 'axios';
 import Loading from './Loading';
+import ImageWrapper from './ImageWrapper';
 
 export default function ImageSlider() {
   const [currentCategory, setCurrentCategory] = useState(0);
@@ -140,15 +141,7 @@ export default function ImageSlider() {
                 .map((media, index) => (
                   <SwiperSlide key={index}>
                     {media.type === 'PHOTO' ? (
-                      <Image
-                        src={media.href}
-                        fill
-                        loading="lazy"
-                        alt={'photo slide ' + category.title + index}
-                        className="object-cover pointer-events-none"
-                        sizes="(min-width: 850px) 100vw, 65vw"
-                        quality={100}
-                      />
+                      <ImageWrapper href={media.href} />
                     ) : (
                       <video
                         src={media.href}

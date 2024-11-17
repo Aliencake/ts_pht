@@ -50,15 +50,15 @@ export default function SortableMedia(props: SortableMediaProps) {
       <TableCell>
         {thumbnail ? (
           <div className="h-16 w-auto">
-            {isLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
             <Image
               height={50}
               width={50}
               src={thumbnail}
-              alt="thumbnail"
+              alt="image"
               onLoad={handleImageLoad}
               className="rounded-md"
             />
+            {isLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
           </div>
         ) : (
           <FileVideo className="rounded-md h-14 " />
